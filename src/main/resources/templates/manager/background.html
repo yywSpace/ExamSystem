@@ -6,6 +6,15 @@
     <title>管理员后台</title>
     <link rel="stylesheet" href="layui/css/layui.css">
 
+    <style>
+        .admin-left-nav-img {
+            border-radius: 0;
+            width: 20px;
+            height: 20px;
+            padding-right: 5px
+        }
+    </style>
+
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
@@ -13,35 +22,21 @@
         <div class="layui-logo">上机考试系统</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
-            <li class="layui-nav-item"><a href="">教师管理</a></li>
-            <li class="layui-nav-item"><a href="">考试清理</a></li>
-            <li class="layui-nav-item"><a href="">系统配置</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">其它系统</a>
-                <dl class="layui-nav-child">
-                    <dd><a href="">邮件管理</a></dd>
-                    <dd><a href="">消息管理</a></dd>
-                    <dd><a href="">授权管理</a></dd>
-                </dl>
-            </li>
+            <li class="layui-nav-item"><a href="">教师界面</a></li>
+            <!--            <li class="layui-nav-item"><a href="">考试清理</a></li>-->
         </ul>
         <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <a href="">控制台<span class="layui-badge">9</span></a>
-            </li>
-            <li class="layui-nav-item">
-                <a href="">个人中心<span class="layui-badge-dot"></span></a>
-            </li>
             <li class="layui-nav-item" lay-unselect="">
-                <a href="javascript:;"><img src="//t.cn/RCzsdCq" class="layui-nav-img">
+                <a href="javascript:;"><img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
                     我
                     <span class="layui-nav-more"></span>
                 </a>
                 <dl class="layui-nav-child  layui-anim layui-anim-upbit">
                     <dd><a href="javascript:;">修改信息</a></dd>
-                    <dd><a href="javascript:;">安全管理</a></dd>
-                    <dd><a href="javascript:;">退了</a></dd>
                 </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;">注销</a>
             </li>
         </ul>
     </div>
@@ -49,9 +44,22 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree"  lay-filter="demo">
+            <ul class="layui-nav layui-nav-tree" lay-filter="demo">
+                <li class="layui-nav-item">
+                    <a href="">
+                        <img alt="修改信息" src="images/admin/message.png" class="admin-left-nav-img">
+                        <span>
+                          修改信息
+                        </span>
+                    </a>
+                </li>
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">所有商品</a>
+                    <a class="" href="javascript:;">
+                        <img alt="教师管理" src="images/admin/teacher_manager.png" class="admin-left-nav-img">
+                        <span>
+                          教师管理
+                        </span>
+                    </a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">列表一</a></dd>
                         <dd><a href="javascript:;">列表二</a></dd>
@@ -60,15 +68,26 @@
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
+                    <a href="javascript:;">
+                        <img alt="考试清理" src="images/admin/exam_clear.png" class="admin-left-nav-img">
+                        <span>
+                          考试清理
+                        </span>
+                    </a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">列表一</a></dd>
                         <dd><a href="javascript:;">列表二</a></dd>
                         <dd><a href="">超链接</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
+                <li class="layui-nav-item">
+                    <a href="">
+                        <img alt="系统配置" src="images/admin/exam_setting.png" class="admin-left-nav-img">
+                        <span>
+                          系统配置
+                        </span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -89,7 +108,7 @@
     //JavaScript代码区域
     layui.use('element', function () {
         var element = layui.element;
-        element.on('nav(demo)', function(data){
+        element.on('nav(demo)', function (data) {
             console.log(data);
         });
     });

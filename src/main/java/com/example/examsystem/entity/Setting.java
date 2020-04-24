@@ -1,6 +1,7 @@
 package com.example.examsystem.entity;
 
 public class Setting {
+    private int id;
     /**
      * 后台扫描任务执行的周期 minute
      */
@@ -21,9 +22,17 @@ public class Setting {
     private int uploadBytesLower;
 
     /**
-     *  是否允许主考教师清理和删除考试
+     * 是否允许主考教师清理和删除考试
      */
     private boolean allowClearAndDelete;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getDutyCycle() {
         return dutyCycle;

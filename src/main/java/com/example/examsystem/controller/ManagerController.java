@@ -45,7 +45,7 @@ public class ManagerController {
     @ResponseBody
     @RequestMapping("/selectAdmin")
     public String selectTest() {
-        Admin admin = adminMapper.getAdminById(this.admin.getId());
+        Admin admin = adminMapper.getAdminByName(this.admin.getName());
         return admin.toString();
     }
 }
