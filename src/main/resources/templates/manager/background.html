@@ -18,7 +18,7 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
+    <div class="layui-header" th:fragment="header">
         <div class="layui-logo">上机考试系统</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
@@ -41,10 +41,10 @@
         </ul>
     </div>
 
-    <div class="layui-side layui-bg-black">
+    <div class="layui-side layui-bg-black" th:fragment="left_side_bar">
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="demo">
+            <ul class="layui-nav layui-nav-tree">
                 <li class="layui-nav-item">
                     <a href="">
                         <img alt="修改信息" src="images/admin/message.png" class="admin-left-nav-img">
@@ -61,10 +61,8 @@
                         </span>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="javascript:;">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="javascript:;" >添加教师</a></dd>
+                        <dd><a href="javascript:;" th:href="@{/teacherListPage}">教师列表</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item">
@@ -97,21 +95,13 @@
         <div style="padding: 15px;">内容主体区域</div>
     </div>
 
-    <div class="layui-footer">
+    <div class="layui-footer" th:fragment="footer">
         <!-- 底部固定区域 -->
         © layui.com - 底部固定区域
     </div>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="/layui/layui.js"></script>
-<script>
-    //JavaScript代码区域
-    layui.use('element', function () {
-        var element = layui.element;
-        element.on('nav(demo)', function (data) {
-            console.log(data);
-        });
-    });
-</script>
+<script src="/layui/layui.all.js"></script>
+
 </body>
 </html>
