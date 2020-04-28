@@ -15,8 +15,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin login(String name, String password) {
-        List<Admin> adminList = adminMapper.getAdminList();
-        if (adminList.size() == 0) {
+        int adminCount = adminMapper.getAdminCount();
+        if (adminCount == 0) {
             if (name.equals("admin") && password.equals("admin")) {
                 Admin admin = new Admin();
                 admin.setName("admin");
@@ -25,15 +25,9 @@ public class AdminServiceImpl implements AdminService {
             } else
                 return null;
         }
-        Optional<Admin> adminOptional = adminList
-                .stream()
-                .filter(admin -> admin.getName().equals(name))
-                .findFirst();
-        if (adminOptional.isPresent()) {
-            Admin admin = adminOptional.get();
-            if (admin.getPassword().equals(password))
-                return admin;
-        }
+        Admin admin = adminMapper.getAdminByName(name);
+        if (admin.getPassword().equals(password))
+            return admin;
         return null;
     }
 
@@ -50,5 +44,15 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteAdmin(Admin admin) {
         adminMapper.deleteAdminById(admin.getId());
+    }
+
+    @Override
+    public int getAdminCount() {
+       return adminMapper.getAdminCount();
+    }
+
+    @Override
+    public List<Admin> getAdminList() {
+        return adminMapper.getAdminList();
     }
 }

@@ -24,4 +24,7 @@ public interface AdminMapper {
 
     @Select("select * from admin")
     List<Admin> getAdminList();
+
+    @Select("select count(*) from admin")
+    int getAdminCount();
 }

@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 public class AdminController {
-    Admin admin;
     @Autowired
     TeacherServiceImpl teacherService;
     @Autowired
@@ -36,18 +36,45 @@ public class AdminController {
 
     @RequestMapping("/teacherListPage")
     public String teacherListPage(Model model) {
+        int adminCount = adminService.getAdminCount();
+        model.addAttribute("adminCount", adminCount);
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
         return "manager/adminTeacherManager";
     }
 
     @RequestMapping("/examSettingPage")
     public String examSettingPage(Model model) {
+        int adminCount = adminService.getAdminCount();
+        model.addAttribute("adminCount", adminCount);
         model.addAttribute("setting", settingService.getSetting());
         return "manager/adminExamSetting";
     }
+
     @RequestMapping("/adminInfoPage")
     public String adminInfoPage(Model model) {
-        return "manager/adminExamSetting";
+        int adminCount = adminService.getAdminCount();
+        model.addAttribute("adminCount", adminCount);
+        System.out.println(adminCount);
+        if (adminCount == 0) {
+            Admin admin = new Admin();
+            admin.setName("admin");
+            admin.setPassword("admin");
+            model.addAttribute("admin", admin);
+        } else {
+            // 在登录时将信息存入session
+            model.addAttribute("admin", adminService.getAdminList().get(0));
+        }
+
+        return "manager/adminModifyMessage";
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateAdmin")
+    public void updateAdmin(Admin admin) {
+        if (admin.getId() == 0) {
+            adminService.insertAdmin(admin);
+        } else
+            adminService.updateAdmin(admin);
     }
 
     @ResponseBody
@@ -65,6 +92,12 @@ public class AdminController {
     @ResponseBody
     @RequestMapping("/insertTeacher")
     public void insertTeacher(Teacher teacher) {
+        if (teacher.isManager()) {
+            Admin admin = new Admin();
+            admin.setName(teacher.getName());
+            admin.setPassword(teacher.getPassword());
+            adminService.insertAdmin(admin);
+        }
         teacherService.insertTeacher(teacher);
     }
 

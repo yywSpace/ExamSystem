@@ -27,12 +27,13 @@
         </ul>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item" lay-unselect="">
-                <a href="javascript:;"><img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
+                <a href="javascript:;">
+                    <img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
                     我
                     <span class="layui-nav-more"></span>
                 </a>
                 <dl class="layui-nav-child  layui-anim layui-anim-upbit">
-                    <dd><a href="javascript:;">修改信息</a></dd>
+                    <dd><a href="javascript:;" th:href="@{/adminInfoPage}">修改信息</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item">
@@ -43,17 +44,19 @@
 
     <div class="layui-side layui-bg-black" th:fragment="left_side_bar">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree">
-                <li class="layui-nav-item">
-                    <a href="">
+                <li class="layui-nav-item" th:class="${admin == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
+                    <a href="" th:href="@{/adminInfoPage}">
                         <img alt="修改信息" src="images/admin/message.png" class="admin-left-nav-img">
                         <span>
                           修改信息
                         </span>
+                        <span class="layui-badge-dot" th:class="${adminCount == 0?'layui-badge-dot':''}"></span>
+
                     </a>
                 </li>
-                <li class="layui-nav-item"  th:class="${pageSize == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
+                <li class="layui-nav-item"
+                    th:class="${pageSize == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
                     <a class="" href="javascript:;" th:href="@{/teacherListPage}">
                         <img alt="教师管理" src="images/admin/teacher_manager.png" class="admin-left-nav-img">
                         <span>
@@ -74,7 +77,8 @@
                         <dd><a href="">超链接</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"  th:class="${setting == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
+                <li class="layui-nav-item"
+                    th:class="${setting == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
                     <a href="" th:href="@{/examSettingPage}">
                         <img alt="系统配置" src="images/admin/exam_setting.png" class="admin-left-nav-img">
                         <span>

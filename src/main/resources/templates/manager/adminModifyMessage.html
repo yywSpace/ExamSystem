@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="layui/css/layui.css">
 
     <style>
+
+        body {
+            background-color: #f2f2f2;
+        }
+
         .admin-left-nav-img {
             border-radius: 0;
             width: 20px;
@@ -15,19 +20,20 @@
         }
 
         .form-item {
+            width: 300px
+        }
+
+        .left {
             float: left;
-            width: 300px;
-            margin-right: 20px;
+            height: 100%;
+            width: 500px;
+            margin-right: 10px;
         }
 
-        .form-setting-item-label {
-            width: 150px;
-        }
-
-        .form-setting-item-desc {
-            line-height: 38px;
-            padding-left: 10px;
-            font-style: italic;
+        .right {
+            font-size: 140%;
+            overflow: auto;
+            height: 100%;
         }
 
     </style>
@@ -39,72 +45,82 @@
     <div th:replace="/manager/background::left_side_bar"></div>
 
     <div class="layui-body">
+        <div class="left">
+            <form class="layui-form" id="admin_form" method="post" style="padding-top: 15px" lay-filter="example">
+                <p style="text-align: center; font-size:150%; margin-bottom: 10px; width: 450px">管理员信息</p>
+                <input th:id="id" type="hidden" name="id" th:value="${admin.getId()}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员帐号</label>
+                    <div class="layui-input-block ">
+                        <input th:id="name" type="text" name="name" lay-verify="name" autocomplete="off"
+                               th:value="${admin.getName()}"
+                               placeholder="请输入帐号"
+                               class="layui-input form-item">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input id="password" type="password" name="password" lay-verify="password" autocomplete="off"
+                               placeholder="请输入密码"
+                               class="layui-input form-item">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">确认密码</label>
+                    <div class="layui-input-block">
+                        <input id="repeat_password" type="password" name="repeat_password" lay-verify="repeat_password"
+                               autocomplete="off"
+                               placeholder="请输入密码"
+                               class="layui-input form-item">
+                    </div>
+                </div>
 
-        <form id="setting_form" class="layui-form" method="post" style="padding-top: 15px">
-            <p style="text-align: center; font-size:150%; margin-bottom: 10px ;width: 450px">考试设置</p>
-            <input th:id="id" type="hidden" name="id" th:value="${setting.getId()}">
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">后台任务间隔时间</label>
-                <div class="layui-input-block" style="">
-                    <input type="number" name="dutyCycle" autocomplete="off" th:value="${setting.getDutyCycle()}"
-                           class="layui-input form-item">
-                    <p class="form-setting-item-desc">后台任务时间周期，指定扫描考试的间隔时间，单位为分钟</p>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" id="teacher_submit" class="layui-btn" lay-submit=""
+                                lay-filter="submit_button">修改
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">分页查询记录条数</label>
-                <div class="layui-input-block">
-                    <input type="number" name="pageCount" autocomplete="off" th:value="${setting.getPageCount()}"
-                           class=" layui-input form-item">
-                    <p class="form-setting-item-desc">分页查询时的每页记录数</p>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">手动开启考试时间阈值</label>
-                <div class="layui-input-block">
-                    <input type="number" name="timeThreshold" autocomplete="off"
-                           th:value="${setting.getTimeThreshold()}"
-                           class="layui-input form-item">
-                    <p class="form-setting-item-desc">手动开启考试的时间阈值,指定手工开起考试的最大提前量，单位为分钟</p>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">上传文件字节数上限</label>
-                <div class="layui-input-block">
-                    <input type="number" name="uploadBytesUpper" autocomplete="off"
-                           th:value="${setting.getUploadBytesUpper()}"
-                           class="layui-input form-item">
-                    <p class="form-setting-item-desc">学生上传文件字节数的最大有效范围，高于此值发出警告</p>
-                </div>
-            </div>
+            </form>
+        </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">上传文件字节数下限</label>
-                <div class="layui-input-block">
-                    <input type="number" name="uploadBytesLower" placeholder="请输入"
-                           th:value="${setting.getUploadBytesLower()}"
-                           autocomplete="off" class="layui-input form-item">
-                    <p class="form-setting-item-desc">学生上传文件字节数的最大有效范围，低于此值发出警告</p>
+        <div class="right" style="margin-top: 15px">
+            <p style="text-align: center; margin-bottom: 10px; width: 90%">操作指南</p>
+            <div class="layui-card" style="width: 90%">
+                <div class="layui-card-header">教师管理</div>
+                <div class="layui-card-body">
+                    <ul>
+                        <li>1.可以对教师用户进行增删改查操作</li>
+                        <li>2.可以指定特定教师作为系统管理员</li>
+                    </ul>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label form-setting-item-label">教师清理和删除考试</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="allowClearAndDelete" title="允许" value="true"
-                           th:checked="${setting.isAllowClearAndDelete()}"
-                           class="layui-input form-item">
+            <div class="layui-card" style="width: 90%">
+                <div class="layui-card-header">考试清理</div>
+                <div class="layui-card-body">
+                    <ul>
+                        <li>1.数据库中的学生信息</li>
+                        <li>2.登录ip地址绑定信息</li>
+                        <li>3.提交信息</li>
+                        <li>4.文件系统中的提交文件等</li>
+                    </ul>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button type="submit" id="teacher_submit" class="layui-btn" lay-submit=""
-                            lay-filter="submit_button">提交
-                    </button>
-                    <button type="button" id="restoreDefault" class="layui-btn layui-btn-primary">恢复默认</button>
+            <div class="layui-card" style="width: 90%">
+                <div class="layui-card-header">系统配置</div>
+                <div class="layui-card-body" >
+                    <ul>
+                        <li>1.后台任务的时间周期</li>
+                        <li>2.分页查询时的每页记录数</li>
+                        <li>3.手动开启考试的时间阈值</li>
+                        <li>4.学生上传文件字节数的有效范围</li>
+                        <li>5.可以指定是否允许主考教师清理和删除考试</li>
+                    </ul>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     <div th:replace="/manager/background::footer"></div>
 </div>
@@ -114,39 +130,39 @@
     layui.use(['form'], function () {
         var form = layui.form;
         //监听提交
-
         form.on('submit(submit_button)', function (data) {
-            layer.confirm('确定要更新数据吗？', function (index) {
+            layer.confirm('确定要更新信息吗？', function (index) {
                 $.ajax({
-                    url: "/updateSetting",
+                    url: "/updateAdmin",
                     async: false,
                     type: "POST",
                     dataType: "text",
-                    data: data.field
-                });
-                layer.close(index);
-                $("#setting_form").submit()
-            });
-            return false;
-        });
-        //表单取值
-        layui.$('#restoreDefault').on('click', function () {
-            layer.confirm('确定要重置数据吗？', function (index) {
-                var id = $("#id").val();
-                $.ajax({
-                    url: "/resetSetting",
-                    async: false,
-                    type: "POST",
-                    dataType: "text",
-                    data: {id: id},
+                    data: data.field,
                     success() {
-                        $("#setting_form").submit()
+                        $("#admin_form").submit()
+                        layer.msg("修改成功")
                     }
                 });
                 layer.close(index);
             });
+            return false;
         });
-
+        form.verify({
+            name: function (value) {
+                if (value.length < 5) {
+                    return '帐号至少得5个字符';
+                }
+            },
+            // password: [
+            //     /^[\S]{6,12}$/
+            //     , '密码必须6到12位，且不能出现空格'
+            // ],
+            repeat_password: function (value) {
+                var rePas = $("#password").val();
+                if (value != rePas)
+                    return '两次输入的密码不一致!';
+            }
+        });
     });
 </script>
 </body>
