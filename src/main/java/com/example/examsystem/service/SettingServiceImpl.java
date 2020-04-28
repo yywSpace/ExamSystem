@@ -33,4 +33,17 @@ public class SettingServiceImpl implements SettingService {
     public void updateSetting(Setting setting) {
         settingMapper.updateSetting(setting);
     }
+
+    @Override
+    public void restoreToDefault(int id) {
+        Setting setting = new Setting();
+        setting.setId(id);
+        setting.setAllowClearAndDelete(true);
+        setting.setDutyCycle(1);
+        setting.setPageCount(10);
+        setting.setTimeThreshold(30);
+        setting.setUploadBytesLower(0);
+        setting.setUploadBytesUpper(5120);
+        settingMapper.updateSetting(setting);
+    }
 }

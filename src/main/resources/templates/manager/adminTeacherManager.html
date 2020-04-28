@@ -13,6 +13,22 @@
             height: 20px;
             padding-right: 5px
         }
+
+        .form-item {
+            width: 300px
+        }
+
+        .left {
+            float: left;
+            height: 100%;
+            width: 500px;
+            margin-right: 10px;
+        }
+
+        .right {
+            overflow: auto;
+            height: 100%;
+        }
     </style>
 
 </head>
@@ -22,20 +38,70 @@
     <div th:replace="/manager/background::left_side_bar"></div>
 
     <div class="layui-body">
+        <div class="left">
+            <form class="layui-form" id="teacher_form" method="post" style="padding-top: 15px" action=""
+                  lay-filter="example">
+                <p style="text-align: center; font-size:150%; margin-bottom: 10px">添加教师</p>
+                <input th:id="id" type="hidden" name="id">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">教师帐号</label>
+                    <div class="layui-input-block ">
+                        <input th:id="name" type="text" name="name" lay-verify="name" autocomplete="off"
+                               placeholder="请输入帐号"
+                               class="layui-input form-item-width">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">教师全称</label>
+                    <div class="layui-input-block">
+                        <input id="fullName" type="text" name="fullName" lay-verify="fullName" autocomplete="off"
+                               placeholder="请输入全称"
+                               class="layui-input form-item-width">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input id="password" type="text" name="password" lay-verify="password" autocomplete="off"
+                               placeholder="请输入密码"
+                               class="layui-input form-item-width">
+                    </div>
+                </div>
 
-        <table class="layui-hide" id="test" lay-filter="test"></table>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理员</label>
+                    <div class="layui-input-block">
+                        <input id="manager" type="checkbox" name="manager" th:value="true"
+                               lay-verify="manager"
+                               title="是否为管理员">
+                    </div>
+                </div>
 
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="deleteCheckData">删除选中数据</button>
-            </div>
-        </script>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" id="teacher_submit" class="layui-btn" lay-submit=""
+                                lay-filter="submit_button">提交
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-        <script type="text/html" id="operationCell">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-        </script>
+        <div class="right">
+            <table class="layui-hide" id="test" lay-filter="test"></table>
 
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="deleteCheckData">删除选中数据</button>
+                </div>
+            </script>
+
+            <script type="text/html" id="operationCell">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
     </div>
 
     <div th:replace="/manager/background::footer"></div>
@@ -48,7 +114,7 @@
         table.render({
             elem: '#test'
             , url: '/teacherList'
-            , limit: 5
+            , limit: [[${pageSize}]]
             , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
 
             , defaultToolbar: ['filter', 'exports', 'print']
@@ -90,7 +156,6 @@
                         table.reload('test');
                         layer.close(index);
                     });
-
                     break;
             }
         });
@@ -115,8 +180,55 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
-                layer.alert('编辑行：<br>' + JSON.stringify(data))
+                $("#teacher_submit").text("更新");
+                $("#id").val(data.id);
+                $("#name").val(data.name);
+                $("#fullName").val(data.fullName);
+                $("#password").val(data.password);
+                $('#manager').attr("checked", data.manager); //注意这里使用的是attr()
+                layui.form.render(); //重新渲染显示效果
             }
+        });
+
+    });
+
+    layui.use(['form'], function () {
+        var form = layui.form;
+        //自定义验证规则
+        form.verify({
+            // name: function (value) {
+            //     if (value.length < 5) {
+            //         return '帐号至少得5个字符';
+            //     }
+            // }
+            // , password: [
+            //     /^[\S]{6,12}$/
+            //     , '密码必须6到12位，且不能出现空格'
+            // ],
+        });
+
+        form.on('submit(submit_button)', function (data) {
+            if ($("#teacher_submit").text() === '提交') {
+                // layer.msg(JSON.stringify(data.field));
+                $.ajax({
+                    url: "/insertTeacher",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field
+                });
+            } else if ($("#teacher_submit").text() === '更新') {
+                // layer.msg(JSON.stringify(data.field));
+                $.ajax({
+                    url: "/updateTeacher",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field
+                });
+                $("#teacher_submit").text("提交");
+            }
+            return true;
         });
     });
 </script>

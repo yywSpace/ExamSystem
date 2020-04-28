@@ -53,17 +53,13 @@
                         </span>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">
+                <li class="layui-nav-item"  th:class="${pageSize == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
+                    <a class="" href="javascript:;" th:href="@{/teacherListPage}">
                         <img alt="教师管理" src="images/admin/teacher_manager.png" class="admin-left-nav-img">
                         <span>
                           教师管理
                         </span>
                     </a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" >添加教师</a></dd>
-                        <dd><a href="javascript:;" th:href="@{/teacherListPage}">教师列表</a></dd>
-                    </dl>
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
@@ -78,8 +74,8 @@
                         <dd><a href="">超链接</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="">
+                <li class="layui-nav-item"  th:class="${setting == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
+                    <a href="" th:href="@{/examSettingPage}">
                         <img alt="系统配置" src="images/admin/exam_setting.png" class="admin-left-nav-img">
                         <span>
                           系统配置
@@ -97,7 +93,7 @@
 
     <div class="layui-footer" th:fragment="footer">
         <!-- 底部固定区域 -->
-        © layui.com - 底部固定区域
+        © 上机考试系统
     </div>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>

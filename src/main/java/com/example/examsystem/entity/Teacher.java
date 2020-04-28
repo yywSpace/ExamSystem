@@ -5,7 +5,7 @@ public class Teacher {
     private String name;
     private String fullName;
     private String password;
-    private boolean isManager;
+    private Boolean isManager = false;
 
     public int getId() {
         return id;
@@ -39,11 +39,11 @@ public class Teacher {
         this.password = password;
     }
 
-    public boolean isManager() {
+    public Boolean isManager() {
         return isManager;
     }
 
-    public void setManager(boolean manager) {
+    public void setManager(Boolean manager) {
         isManager = manager;
     }
 

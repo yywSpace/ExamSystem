@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>考试设置</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        .admin-left-nav-img {
+            border-radius: 0;
+            width: 20px;
+            height: 20px;
+            padding-right: 5px
+        }
+
+        .form-item {
+            float: left;
+            width: 300px;
+            margin-right: 20px;
+        }
+
+        .form-setting-item-label {
+            width: 150px;
+        }
+
+        .form-setting-item-desc {
+            line-height: 38px;
+            padding-left: 10px;
+            font-style: italic;
+        }
+
+    </style>
+
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div th:replace="/manager/background::header"></div>
+    <div th:replace="/manager/background::left_side_bar"></div>
+
+    <div class="layui-body">
+
+        <form id="setting_form" class="layui-form" method="post" style="padding-top: 15px">
+            <p style="text-align: center; font-size:150%; margin-bottom: 10px ;width: 450px">考试设置</p>
+            <input th:id="id" type="hidden" name="id" th:value="${setting.getId()}">
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">后台任务间隔时间</label>
+                <div class="layui-input-block" style="">
+                    <input type="number" name="dutyCycle" autocomplete="off" th:value="${setting.getDutyCycle()}"
+                           class="layui-input form-item">
+                    <p class="form-setting-item-desc">后台任务时间周期，指定扫描考试的间隔时间，单位为分钟</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">分页查询记录条数</label>
+                <div class="layui-input-block">
+                    <input type="number" name="pageCount" autocomplete="off" th:value="${setting.getPageCount()}"
+                           class=" layui-input form-item">
+                    <p class="form-setting-item-desc">分页查询时的每页记录数</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">手动开启考试时间阈值</label>
+                <div class="layui-input-block">
+                    <input type="number" name="timeThreshold" autocomplete="off"
+                           th:value="${setting.getTimeThreshold()}"
+                           class="layui-input form-item">
+                    <p class="form-setting-item-desc">手动开启考试的时间阈值,指定手工开起考试的最大提前量，单位为分钟</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">上传文件字节数上限</label>
+                <div class="layui-input-block">
+                    <input type="number" name="uploadBytesUpper" autocomplete="off"
+                           th:value="${setting.getUploadBytesUpper()}"
+                           class="layui-input form-item">
+                    <p class="form-setting-item-desc">学生上传文件字节数的最大有效范围，高于此值发出警告</p>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">上传文件字节数下限</label>
+                <div class="layui-input-block">
+                    <input type="number" name="uploadBytesLower" placeholder="请输入"
+                           th:value="${setting.getUploadBytesLower()}"
+                           autocomplete="off" class="layui-input form-item">
+                    <p class="form-setting-item-desc">学生上传文件字节数的最大有效范围，低于此值发出警告</p>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label form-setting-item-label">教师清理和删除考试</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="allowClearAndDelete" title="允许" value="true"
+                           th:checked="${setting.isAllowClearAndDelete()}"
+                           class="layui-input form-item">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" id="teacher_submit" class="layui-btn" lay-submit=""
+                            lay-filter="submit_button">提交
+                    </button>
+                    <button type="button" id="restoreDefault" class="layui-btn layui-btn-primary">恢复默认</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div th:replace="/manager/background::footer"></div>
+</div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+        //监听提交
+
+        form.on('submit(submit_button)', function (data) {
+            layer.confirm('确定要更新数据吗？', function (index) {
+                $.ajax({
+                    url: "/updateSetting",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field
+                });
+                layer.close(index);
+                $("#setting_form").submit()
+            });
+            return false;
+        });
+        //表单取值
+        layui.$('#restoreDefault').on('click', function () {
+            layer.confirm('确定要重置数据吗？', function (index) {
+                var id = $("#id").val();
+                $.ajax({
+                    url: "/resetSetting",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: {id: id},
+                    success() {
+                        $("#setting_form").submit()
+                    }
+                });
+                layer.close(index);
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,11 +1,15 @@
 package com.example.examsystem.controller;
 
 import com.example.examsystem.entity.Admin;
+import com.example.examsystem.entity.Setting;
 import com.example.examsystem.entity.Teacher;
 import com.example.examsystem.mapper.AdminMapper;
+import com.example.examsystem.service.AdminServiceImpl;
+import com.example.examsystem.service.SettingServiceImpl;
 import com.example.examsystem.service.TeacherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,9 +23,11 @@ public class AdminController {
     Admin admin;
     @Autowired
     TeacherServiceImpl teacherService;
+    @Autowired
+    SettingServiceImpl settingService;
 
     @Autowired
-    AdminMapper adminMapper;
+    AdminServiceImpl adminService;
 
     @RequestMapping("/background")
     public String background() {
@@ -29,18 +35,49 @@ public class AdminController {
     }
 
     @RequestMapping("/teacherListPage")
-    public String teacherListPage() {
+    public String teacherListPage(Model model) {
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
         return "manager/adminTeacherManager";
     }
 
-    @RequestMapping("/teacherAddPage")
-    public String teacherAddPage() {
-        return "manager/adminTeacherAdd";
+    @RequestMapping("/examSettingPage")
+    public String examSettingPage(Model model) {
+        model.addAttribute("setting", settingService.getSetting());
+        return "manager/adminExamSetting";
     }
+    @RequestMapping("/adminInfoPage")
+    public String adminInfoPage(Model model) {
+        return "manager/adminExamSetting";
+    }
+
+    @ResponseBody
+    @RequestMapping("/resetSetting")
+    public void resetSetting(int id) {
+        settingService.restoreToDefault(id);
+    }
+
 
     @RequestMapping("/deleteTeacher")
     public void deleteTeacher(@RequestParam("id") int id) {
         teacherService.deleteTeacherById(id);
+    }
+
+    @ResponseBody
+    @RequestMapping("/insertTeacher")
+    public void insertTeacher(Teacher teacher) {
+        teacherService.insertTeacher(teacher);
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateTeacher")
+    public void updateTeacher(Teacher teacher) {
+        teacherService.updateTeacher(teacher);
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateSetting")
+    public void updateSetting(Setting setting) {
+        settingService.updateSetting(setting);
     }
 
     @ResponseBody
@@ -58,36 +95,5 @@ public class AdminController {
         tableData.put("data", teacherList);
         //返回给前端
         return tableData;
-    }
-
-
-    @ResponseBody
-    @RequestMapping("/insertAdmin")
-    public void insertTest() {
-        admin = new Admin();
-        admin.setName("134");
-        admin.setPassword("13");
-        adminMapper.insertAdmin(admin);
-    }
-
-    @ResponseBody
-    @RequestMapping("/updateAdmin")
-    public void updateTest() {
-        admin.setName("1111");
-        admin.setPassword("1111");
-        adminMapper.updateAdmin(admin);
-    }
-
-    @ResponseBody
-    @RequestMapping("/deleteAdmin")
-    public void deleteTest() {
-        adminMapper.deleteAdminById(admin.getId());
-    }
-
-    @ResponseBody
-    @RequestMapping("/selectAdmin")
-    public String selectTest() {
-        Admin admin = adminMapper.getAdminByName(this.admin.getName());
-        return admin.toString();
     }
 }

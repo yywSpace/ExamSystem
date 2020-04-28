@@ -15,7 +15,7 @@ public interface SettingMapper {
             "#{uploadBytesLower}, #{allowClearAndDelete})")
     void insertSetting(Setting setting);
 
-    @Update("update admin " +
+    @Update("update setting " +
             "set dutyCycle = #{dutyCycle}, pageCount = #{pageCount}, timeThreshold = #{timeThreshold}, " +
             "uploadBytesUpper = #{uploadBytesUpper}, uploadBytesLower = #{uploadBytesLower}, allowClearAndDelete = #{allowClearAndDelete} " +
             "where id = #{id}")
@@ -29,4 +29,6 @@ public interface SettingMapper {
 
     @Select("select * from setting")
     List<Setting> getSettings();
+
+
 }
