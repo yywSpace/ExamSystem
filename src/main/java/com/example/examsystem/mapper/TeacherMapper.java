@@ -27,6 +27,6 @@ public interface TeacherMapper {
     @Select("select * from teacher")
     List<Teacher> getTeacherList();
 
-    @Select("select * from teacher limit #{start},#{pageSize}")
+    @Select("select * from teacher order by id desc limit #{start},#{pageSize}")
     List<Teacher> getTeacherLimitBy(int start, int pageSize);
 }

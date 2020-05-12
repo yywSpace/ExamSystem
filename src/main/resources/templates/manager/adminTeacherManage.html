@@ -42,7 +42,7 @@
             <form class="layui-form" id="teacher_form" method="post" style="padding-top: 15px" action=""
                   lay-filter="example">
                 <p style="text-align: center; font-size:150%; margin-bottom: 10px">添加教师</p>
-                <input th:id="id" type="hidden" name="id">
+                <input th:id="id" type="hidden" name="id" value="0">
                 <div class="layui-form-item">
                     <label class="layui-form-label">教师帐号</label>
                     <div class="layui-input-block ">
@@ -80,9 +80,8 @@
                 <div class="layui-form-item">
                     <div class="layui-input-block">
                         <button type="submit" id="teacher_submit" class="layui-btn" lay-submit=""
-                                lay-filter="submit_button">提交
-                        </button>
-                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                lay-filter="submit_button">提交</button>
+                        <button type="reset" id="message_reset" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
             </form>
@@ -121,11 +120,11 @@
             , title: '教师管理表'
             , cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'name', title: '用户名'}
-                    , {field: 'fullName', title: '全名'}
-                    , {field: 'manager', title: '是否为管理员'}
-                    , {fixed: 'right', title: '操作', toolbar: '#operationCell'}
+                    {type: 'checkbox', fixed: 'left', align: "center"}
+                    , {field: 'name', title: '用户名', align: "center"}
+                    , {field: 'fullName', title: '全名', align: "center"}
+                    , {field: 'manager', title: '是否为管理员', align: "center"}
+                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
                 ]
             ]
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -165,7 +164,7 @@
             var data = obj.data;
             //console.log(obj)
             if (obj.event === 'del') {
-                layer.confirm('真的删除行么', function (index) {
+                layer.confirm('确定要删除教师' + data.fullName + '？', function (index) {
                     $.ajax({
                         url: "/deleteTeacher",
                         data: {
@@ -180,7 +179,13 @@
                     layer.close(index);
                 });
             } else if (obj.event === 'edit') {
+                var resetBtn = $("#message_reset");
                 $("#teacher_submit").text("更新");
+                resetBtn.text("取消");
+                resetBtn.click(function(){
+                    $("#teacher_submit").text("提交");
+                    $('#manager').attr("checked", false);
+                });
                 $("#id").val(data.id);
                 $("#name").val(data.name);
                 $("#fullName").val(data.fullName);
@@ -208,7 +213,8 @@
         });
 
         form.on('submit(submit_button)', function (data) {
-            if ($("#teacher_submit").text() === '提交') {
+            var teacherSubmitBtn = $("#teacher_submit")
+            if (teacherSubmitBtn.text() === '提交') {
                 // layer.msg(JSON.stringify(data.field));
                 $.ajax({
                     url: "/insertTeacher",
@@ -217,7 +223,7 @@
                     dataType: "text",
                     data: data.field
                 });
-            } else if ($("#teacher_submit").text() === '更新') {
+            } else if (teacherSubmitBtn.text() === '更新') {
                 // layer.msg(JSON.stringify(data.field));
                 $.ajax({
                     url: "/updateTeacher",
