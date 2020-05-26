@@ -2,6 +2,7 @@ package com.example.examsystem.service;
 
 import com.example.examsystem.entity.Admin;
 import com.example.examsystem.mapper.AdminMapper;
+import com.example.examsystem.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,9 @@ public class AdminServiceImpl implements AdminService {
             } else
                 return null;
         }
+
         Admin admin = adminMapper.getAdminByName(name);
-        if (admin.getPassword().equals(password))
+        if (admin.getPassword().equals(PasswordUtil.getMD5(password)))
             return admin;
         return null;
     }
@@ -48,7 +50,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int getAdminCount() {
-       return adminMapper.getAdminCount();
+        return adminMapper.getAdminCount();
     }
 
     @Override

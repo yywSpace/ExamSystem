@@ -23,10 +23,12 @@ public interface TeacherMapper {
     @Select("select count(*) from teacher")
     int getTeacherCount();
 
-
     @Select("select * from teacher")
     List<Teacher> getTeacherList();
 
     @Select("select * from teacher order by id desc limit #{start},#{pageSize}")
     List<Teacher> getTeacherLimitBy(int start, int pageSize);
+
+    @Select("select * from teacher where name = #{name}")
+    Teacher getTeacherByName(String name);
 }

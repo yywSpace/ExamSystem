@@ -1,8 +1,10 @@
 package com.example.examsystem.service;
 
+import com.example.examsystem.entity.Admin;
 import com.example.examsystem.entity.Teacher;
 import com.example.examsystem.mapper.AdminMapper;
 import com.example.examsystem.mapper.TeacherMapper;
+import com.example.examsystem.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,18 @@ public class TeacherServiceImpl implements TeacherService {
     TeacherMapper teacherMapper;
     @Autowired
     AdminMapper adminMapper;
+
+    @Override
+    public Teacher login(String name, String password) {
+        System.out.println(name+" " + password);
+        Teacher teacher = teacherMapper.getTeacherByName(name);
+        if (teacher == null)
+            return null;
+        if (teacher.getPassword().equals(PasswordUtil.getMD5(password)))
+            return teacher;
+        return null;
+    }
+
     @Override
     public List<Teacher> getTeacherLimitBy(int page, int pageSize) {
         int start = (page - 1) * pageSize;

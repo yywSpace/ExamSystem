@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<ul class="layui-nav layui-bg-blue">
+    <li class="layui-nav-item"><a href="">艳蓝导航</a></li>
+    <li class="layui-nav-item layui-this"><a href="">产品</a></li>
+    <li class="layui-nav-item"><a href="">大数据</a></li>
+    <li class="layui-nav-item">
+        <a href="javascript:;">解决方案</a>
+        <dl class="layui-nav-child">
+            <dd><a href="">移动模块</a></dd>
+            <dd><a href="">后台模版</a></dd>
+            <dd><a href="">电商平台</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item"><a href="">社区</a></li>
+</ul>
+<ul class="layui-nav layui-layout-right layui-bg-blue">
+    <li class="layui-nav-item" lay-unselect="">
+        <a href="javascript:;">
+            <img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
+            <span th:text="${session.teacher.name}"></span>
+            <span class="layui-nav-more"></span>
+        </a>
+        <dl class="layui-nav-child  layui-anim layui-anim-upbit">
+            <dd><a href="javascript:;" th:href="@{/adminInfoPage}">修改信息</a></dd>
+        </dl>
+    </li>
+    <li class="layui-nav-item">
+        <a href="javascript:;" th:href="@{/adminLogout}">注销</a>
+    </li>
+</ul>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+</body>
+</html>

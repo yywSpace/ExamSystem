@@ -8,6 +8,7 @@ import com.example.examsystem.service.AdminServiceImpl;
 import com.example.examsystem.service.ExamServiceImpl;
 import com.example.examsystem.service.SettingServiceImpl;
 import com.example.examsystem.service.TeacherServiceImpl;
+import com.example.examsystem.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,7 @@ import java.util.Map;
 public class AdminController {
     @Autowired
     TeacherServiceImpl teacherService;
+
     @Autowired
     SettingServiceImpl settingService;
 
@@ -32,10 +36,26 @@ public class AdminController {
     @Autowired
     ExamServiceImpl examService;
 
-    @RequestMapping("/logout")
-    public String logout() {
-        // TODO: 2020/5/12 注销
-        return "redirect:/adminInfoPage";
+    @ResponseBody
+    @RequestMapping("/adminLogin")
+    public String login(@RequestParam("account") String account, @RequestParam("password") String password, HttpSession session) {
+        Admin admin = adminService.login(account, password);
+        if (admin != null) {
+            session.setAttribute("admin", admin);
+            return "success";
+        }
+        return "error";
+    }
+
+    @RequestMapping("/adminLoginPage")
+    public String loginPage() {
+        return "loginPage";
+    }
+
+    @RequestMapping("/adminLogout")
+    public String logout(HttpSession session) {
+        session.setAttribute("admin", null);
+        return "redirect:/adminLoginPage";
     }
 
     @RequestMapping("/examManagerPage")
@@ -107,7 +127,7 @@ public class AdminController {
         return "manager/adminExamSetting";
     }
 
-    @RequestMapping(value = {"/adminInfoPage", "/background"})
+    @RequestMapping(value = {"/adminInfoPage", "/admin"})
     public String adminInfoPage(Model model) {
         int adminCount = adminService.getAdminCount();
         model.addAttribute("adminCount", adminCount);
@@ -127,11 +147,13 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping("/updateAdmin")
-    public void updateAdmin(Admin admin) {
+    public void updateAdmin(Admin admin,HttpSession session) {
+        admin.setPassword(PasswordUtil.getMD5(admin.getPassword()));
         if (admin.getId() == 0) {
             adminService.insertAdmin(admin);
         } else
             adminService.updateAdmin(admin);
+        session.setAttribute("admin",admin);
     }
 
     @ResponseBody
@@ -150,6 +172,7 @@ public class AdminController {
     @RequestMapping("/insertTeacher")
     public void insertTeacher(Teacher teacher) {
         System.out.println(teacher.getName());
+        teacher.setPassword(PasswordUtil.getMD5(teacher.getPassword()));
         if (teacher.isManager()) {
             Admin admin = new Admin();
             admin.setName(teacher.getName());

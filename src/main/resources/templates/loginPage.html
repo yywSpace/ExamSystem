@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        .login-main {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 350px;
+            margin: 0 auto;
+        }
+
+        .login-main header {
+            margin-top: 150px;
+            height: 35px;
+            line-height: 35px;
+            font-size: 30px;
+            font-weight: 100;
+            text-align: center;
+        }
+
+        .login-main header, .login-main form, .login-main form .layui-input-inline {
+            margin-bottom: 15px;
+        }
+
+        .login-main form .layui-input-inline, .login-main form .layui-input-inline input, .login-main form .layui-input-inline button {
+            width: 100%;
+        }
+
+        .login-main form .login-btn {
+            margin-bottom: 5px;
+        }
+
+        .login-tab-center {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="login-main">
+
+    <div class="layui-tab layui-tab-brief login-tab-center" lay-filter="tab_login">
+        <ul class="layui-tab-title">
+            <li class="layui-this">教师登录</li>
+            <li>学生登录</li>
+            <li>管理员登录</li>
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+            <div class="layui-tab-item layui-show">
+                <form class="layui-form">
+                    <div class="layui-input-inline">
+                        <input type="text" name="account" required lay-verify="required" placeholder="用户名"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" required lay-verify="required" placeholder="密码"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline login-btn">
+                        <button lay-submit lay-filter="teacherLogin" class="layui-btn">登录</button>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item">
+                <form class="layui-form">
+                    <div class="layui-input-inline">
+                        <input type="text" name="account" required lay-verify="required" placeholder="用户名"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" required lay-verify="required" placeholder="密码"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline login-btn">
+                        <button lay-submit lay-filter="studentLogin" class="layui-btn">登录</button>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-tab-item">
+                <form class="layui-form">
+                    <div class="layui-input-inline">
+                        <input type="text" name="account" required lay-verify="required" placeholder="用户名"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" required lay-verify="required" placeholder="密码"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                    <div class="layui-input-inline login-btn">
+                        <button lay-submit lay-filter="adminLogin" class="layui-btn">登录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.js"></script>
+
+<script type="text/javascript">
+    layui.use(['form', 'layer', 'jquery'], function () {
+        // 操作对象
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.on('submit(teacherLogin)', function (data) {
+            // console.log(data.field);
+            $.ajax({
+                url: 'teacherLogin',
+                data: data.field,
+                dataType: 'text',
+                type: 'post',
+                success: function (data) {
+                    if (data === 'success') {
+                        location.href = "/teacherMainPage";
+                    } else { //  error
+                        layer.msg('登录名或密码错误');
+                    }
+                }
+            });
+            return false;
+        });
+        form.on('submit(studentLogin)', function (data) {
+            // console.log(data.field);
+            layer.msg(data.field);
+
+            $.ajax({
+                url: 'login.php',
+                data: data.field,
+                dataType: 'text',
+                type: 'post',
+                success: function (data) {
+                    if (data === 'success') {
+                        location.href = "/teacherMainPage";
+                    } else { //  error
+                        layer.msg('登录名或密码错误');
+                    }
+                }
+            });
+            return false;
+        });
+        form.on('submit(adminLogin)', function (data) {
+            // console.log(data.field);
+            $.ajax({
+                url: 'adminLogin',
+                data: data.field,
+                dataType: 'text',
+                type: 'post',
+                success: function (data) {
+                    if (data === 'success') {
+                        location.href = "/admin";
+                    } else { //  error
+                        layer.msg('登录名或密码错误');
+                    }
+                }
+            });
+            return false;
+        })
+
+    });
+</script>
+</body>
+</html>
