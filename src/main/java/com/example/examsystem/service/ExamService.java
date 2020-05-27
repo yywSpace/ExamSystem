@@ -7,6 +7,8 @@ import java.util.List;
 public interface ExamService {
     List<Exam> getExamLimitBy(int page, int pageSize);
 
+    Exam getRunningExam();
+
     int getExamCount();
 
     void insertExam(Exam exam);

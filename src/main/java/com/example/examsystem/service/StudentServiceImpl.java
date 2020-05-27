@@ -1,0 +1,50 @@
+package com.example.examsystem.service;
+
+import com.example.examsystem.entity.Student;
+import com.example.examsystem.mapper.StudentMapper;
+import com.example.examsystem.utils.PasswordUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+    @Autowired
+    StudentMapper studentMapper;
+
+    @Override
+    public Student login(String id, String name) {
+        Student student = studentMapper.getStudentById(id);
+        if (student == null)
+            return null;
+        if (student.getName().equals(name))
+            return student;
+        return null;
+    }
+
+    @Override
+    public void insertStudent(Student student) {
+        studentMapper.insertStudent(student);
+    }
+
+    @Override
+    public void updateStudent(Student student) {
+        studentMapper.updateStudent(student);
+    }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentMapper.deleteStudentById(student.getId());
+    }
+
+    @Override
+    public int getStudentCount() {
+        return studentMapper.getStudentCount();
+    }
+
+    @Override
+    public List<Student> getStudentList() {
+        return studentMapper.getStudentList();
+    }
+}

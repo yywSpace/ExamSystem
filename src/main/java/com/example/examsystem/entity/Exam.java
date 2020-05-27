@@ -6,6 +6,7 @@ public class Exam {
     private int id;
     private int teacherId;
     private String name;
+    private String paperName;
     private String startTime;
     private Boolean autoStart;
     private Boolean uploadExamPaper;
@@ -14,6 +15,13 @@ public class Exam {
     private Boolean archived;
     private Boolean cleaned;
 
+    public String getPaperName() {
+        return paperName;
+    }
+
+    public void setPaperName(String paperName) {
+        this.paperName = paperName;
+    }
 
     public int getId() {
         return id;

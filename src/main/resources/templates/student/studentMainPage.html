@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>学生主页</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 80%;
+            margin: auto;
+        }
+
+        .left {
+            float: left;
+            height: 100%;
+            width: 500px;
+            margin-right: 10px;
+        }
+
+        .right {
+            overflow: auto;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="student/framework::header"></div>
+<div class="content">
+    <blockquote class="layui-elem-quote" style="margin-top: 20px;font-size: 150%; height: 40px; line-height: 40px">
+        <img alt="考试进行中" src="images/student/process.png" class="layui-nav-img">
+        <span th:text="${exam.getName()}"></span>考试，正在进行中
+    </blockquote>
+    <div class="left">
+        <h1>试卷下载</h1>
+        <a th:href="@{/downloadExamPaper}" class="layui-btn layui-btn-normal" style="margin-top: 10px;width: 120px">下载</a>
+    </div>
+
+    <div class="right">
+        <h1>答案上传</h1>
+        <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px">
+            请按照考试要求将答案文件打包，再进行上传。同名文件多次上传将会覆盖。
+        </blockquote>
+        <div class="layui-upload">
+            <button type="button" class="layui-btn layui-btn-normal" id="selectAnswer">选择文件</button>
+            <button type="button" class="layui-btn" id="uploadFile">开始上传</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        upload.render({
+            elem: '#selectAnswer'
+            ,url: 'uploadAnswerFile' //改成您自己的上传接口
+            ,auto: false
+            //,multiple: true
+            ,bindAction: '#uploadFile'
+            ,done: function(res){
+                layer.msg(res.msg);
+                console.log(res)
+            }
+        });
+    });
+</script>
+</body>
+</html>

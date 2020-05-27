@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>提交历史</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="student/framework::header"></div>
+<div class="content">
+    <blockquote class="layui-elem-quote" style="margin-top: 20px;font-size: 150%; height: 40px; line-height: 40px">
+        <img alt="考试进行中" src="images/student/process.png" class="layui-nav-img">
+        <span th:text="${exam.getName()}"></span>考试，正在进行中
+    </blockquote>
+    <h1 style="margin-top: 10px;">已上传文件列表</h1>
+    <div>
+        <table class="layui-hide" id="fileTable" lay-filter="fileTable"></table>
+
+
+    </div>
+    <h1>答案上传</h1>
+    <div class="layui-upload">
+        <button type="button" class="layui-btn layui-btn-normal" id="selectAnswer">选择文件</button>
+        <button type="button" class="layui-btn" id="uploadFile">开始上传</button>
+    </div>
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#fileTable'
+            , url: '/teacherList'
+            , limit: [[${pageSize}]]
+            , toolbar: true
+            , defaultToolbar: ['filter', 'exports', 'print']
+            , title: '提交信息表'
+            , cols: [
+                [
+                    {field: 'name', title: '文件名', align: "center"}
+                    , {field: 'fullName', title: '文件大小', align: "center"}
+                    , {field: 'manager', title: '上传时间', align: "center"}
+                ]
+            ]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['prev', 'page', 'next', 'skip', 'count']
+            }
+        });
+
+    });
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        upload.render({
+            elem: '#selectAnswer'
+            , url: 'uploadAnswerFile' //改成您自己的上传接口
+            , auto: false
+            //,multiple: true
+            , bindAction: '#uploadFile'
+            , done: function (res) {
+                layer.msg(res.msg);
+                console.log(res)
+            }
+        });
+    });
+</script>
+</body>
+</html>

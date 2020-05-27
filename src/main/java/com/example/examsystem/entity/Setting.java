@@ -1,6 +1,8 @@
 package com.example.examsystem.entity;
 
 public class Setting {
+    public static String uploadPath = "/home/zhy/IdeaProjects/upload/";
+
     private int id;
     /**
      * 后台扫描任务执行的周期 minute

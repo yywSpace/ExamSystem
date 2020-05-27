@@ -6,7 +6,6 @@ import com.example.examsystem.mapper.AdminMapper;
 import com.example.examsystem.mapper.TeacherMapper;
 import com.example.examsystem.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

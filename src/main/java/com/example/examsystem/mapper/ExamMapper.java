@@ -12,13 +12,13 @@ import java.util.List;
 public interface ExamMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO exam " +
-            "(teacherId, name, startTime, autoStart, uploadExamPaper, running, finished, archived, cleaned) " +
-            "VALUES (#{teacherId}, #{name}, #{startTime}, #{autoStart}, #{uploadExamPaper}, " +
+            "(teacherId, name,paperName, startTime, autoStart, uploadExamPaper, running, finished, archived, cleaned) " +
+            "VALUES (#{teacherId}, #{name},#{paperName}, #{startTime}, #{autoStart}, #{uploadExamPaper}, " +
             "#{running}, #{finished}, #{archived}, #{cleaned});")
     void insertExam(Exam exam);
 
     @Update("update exam set " +
-            "name='${name}', startTime='${startTime}', autoStart=${autoStart}, uploadExamPaper=${uploadExamPaper}, " +
+            "name='${name}', paperName='${paperName}', startTime='${startTime}', autoStart=${autoStart}, uploadExamPaper=${uploadExamPaper}, " +
             "running=${running}, finished=${finished}, archived=${archived}, cleaned=${cleaned} where id = ${id}")
     void updateExam(Exam exam);
 
@@ -31,6 +31,11 @@ public interface ExamMapper {
     @Select("select * from exam where id = ${id}")
     Exam getExamById(int id);
 
+    @Select("select * from exam where running = 1")
+    List<Exam> getRunningExam();
+
     @Select("select count(*) from exam")
     int getExamCount();
+
+
 }

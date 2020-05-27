@@ -20,6 +20,13 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public Exam getRunningExam() {
+        if (examMapper.getRunningExam().size() == 0)
+            return null;
+        return examMapper.getRunningExam().get(0);
+    }
+
+    @Override
     public int getExamCount() {
         return examMapper.getExamCount();
     }
