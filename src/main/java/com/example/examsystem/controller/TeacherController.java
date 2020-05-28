@@ -39,6 +39,6 @@ public class TeacherController {
 
     @RequestMapping("/teacherMainPage")
     public String mainPage() {
-        return "teacher/framework";
+        return "teacher/teacherMainPage";
     }
 }

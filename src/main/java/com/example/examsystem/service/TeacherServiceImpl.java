@@ -24,7 +24,12 @@ public class TeacherServiceImpl implements TeacherService {
         if (teacher == null)
             return null;
         if (teacher.getPassword().equals(PasswordUtil.getMD5(password)))
+        {
+            teacher.setName(name);
+            teacher.setPassword(password);
             return teacher;
+        }
+
         return null;
     }
 

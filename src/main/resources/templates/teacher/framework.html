@@ -6,19 +6,17 @@
     <link rel="stylesheet" href="layui/css/layui.css">
 </head>
 <body>
+<div class="layui-header" th:fragment="header">
 <ul class="layui-nav layui-bg-blue">
-    <li class="layui-nav-item"><a href="">艳蓝导航</a></li>
-    <li class="layui-nav-item layui-this"><a href="">产品</a></li>
-    <li class="layui-nav-item"><a href="">大数据</a></li>
-    <li class="layui-nav-item">
-        <a href="javascript:;">解决方案</a>
-        <dl class="layui-nav-child">
-            <dd><a href="">移动模块</a></dd>
-            <dd><a href="">后台模版</a></dd>
-            <dd><a href="">电商平台</a></dd>
-        </dl>
+    <li style="position:relative;display:inline-block;*display:inline;
+        *zoom:1;vertical-align:middle;line-height:60px;margin-right: 40px;margin-left: 150px">
+    <img alt="图标" src="images/examIcon.png" class="layui-nav-img">
+    上机考试系统
     </li>
-    <li class="layui-nav-item"><a href="">社区</a></li>
+    <li class="layui-nav-item layui-this"><a href="" th:href="@{/teacherMainPage}">首页</a></li>
+    <li class="layui-nav-item"><a href="">考前操作</a></li>
+    <li class="layui-nav-item"><a href="">考中操作</a></li>
+    <li class="layui-nav-item"><a href="">考后操作</a></li>
 </ul>
 <ul class="layui-nav layui-layout-right layui-bg-blue">
     <li class="layui-nav-item" lay-unselect="">
@@ -35,6 +33,7 @@
         <a href="javascript:;" th:href="@{/adminLogout}">注销</a>
     </li>
 </ul>
+</div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>
 </body>
