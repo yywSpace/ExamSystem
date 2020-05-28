@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +46,10 @@ public class AdminController {
         return "error";
     }
 
-    @RequestMapping("/adminLoginPage")
-    public String loginPage() {
+    @RequestMapping("/login")
+    public String loginPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        model.addAttribute("exam", exam);
         return "loginPage";
     }
 
@@ -58,7 +59,7 @@ public class AdminController {
         return "redirect:/adminLoginPage";
     }
 
-    @RequestMapping("/examManagerPage")
+    @RequestMapping("/adminExamManagerPage")
     public String examManagerPage(Model model) {
         int adminCount = adminService.getAdminCount();
         model.addAttribute("adminCount", adminCount);
@@ -110,7 +111,7 @@ public class AdminController {
     }
 
 
-    @RequestMapping("/teacherListPage")
+    @RequestMapping("/adminTeacherListPage")
     public String teacherListPage(Model model) {
         int adminCount = adminService.getAdminCount();
         model.addAttribute("adminCount", adminCount);
@@ -119,7 +120,7 @@ public class AdminController {
         return "manager/adminTeacherManage";
     }
 
-    @RequestMapping("/examSettingPage")
+    @RequestMapping("/adminExamSettingPage")
     public String examSettingPage(Model model) {
         int adminCount = adminService.getAdminCount();
         model.addAttribute("adminCount", adminCount);
@@ -147,13 +148,13 @@ public class AdminController {
 
     @ResponseBody
     @RequestMapping("/updateAdmin")
-    public void updateAdmin(Admin admin,HttpSession session) {
+    public void updateAdmin(Admin admin, HttpSession session) {
         admin.setPassword(PasswordUtil.getMD5(admin.getPassword()));
         if (admin.getId() == 0) {
             adminService.insertAdmin(admin);
         } else
             adminService.updateAdmin(admin);
-        session.setAttribute("admin",admin);
+        session.setAttribute("admin", admin);
     }
 
     @ResponseBody

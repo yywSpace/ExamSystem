@@ -68,7 +68,7 @@
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>
 <script>
-    layui.use('table', function () {
+    layui.use(['table', 'upload'], function () {
         var table = layui.table;
         table.render({
             elem: '#fileTable'
@@ -88,8 +88,6 @@
             }
         });
 
-    });
-    layui.use('upload', function () {
         var upload = layui.upload;
         upload.render({
             elem: '#selectAnswer'
@@ -111,7 +109,7 @@
             if (obj.event === 'del') {
                 layer.confirm('确定要删除文件' + data.answerFileName + '？', function (index) {
                     $.ajax({
-                        url: "/deleteAnswerFile",
+                        url: "deleteAnswerFile",
                         data: {
                             id: data.id//参数
                         },
@@ -125,7 +123,9 @@
                 });
             }
         });
+
     });
+
 </script>
 </body>
 </html>

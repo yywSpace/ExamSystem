@@ -58,7 +58,7 @@
                 </li>
                 <li class="layui-nav-item"
                     th:class="${teacherManager == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
-                    <a class="" href="javascript:;" th:href="@{/teacherListPage}">
+                    <a class="" href="javascript:;" th:href="@{/adminTeacherListPage}">
                         <img alt="教师管理" src="images/admin/teacher_manager.png" class="admin-left-nav-img">
                         <span>
                           教师管理
@@ -67,7 +67,7 @@
                 </li>
                 <li class="layui-nav-item"
                     th:class="${examManager == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
-                    <a href="javascript:;" th:href="@{/examManagerPage}">
+                    <a href="javascript:;" th:href="@{/adminExamManagerPage}">
                         <img alt="考试清理" src="images/admin/exam_clear.png" class="admin-left-nav-img">
                         <span>
                           考试清理
@@ -76,7 +76,7 @@
                 </li>
                 <li class="layui-nav-item"
                     th:class="${setting == null? 'layui-nav-item': 'layui-nav-item layui-nav-itemed'}">
-                    <a href="" th:href="@{/examSettingPage}">
+                    <a href="" th:href="@{/adminExamSettingPage}">
                         <img alt="系统配置" src="images/admin/exam_setting.png" class="admin-left-nav-img">
                         <span>
                           系统配置

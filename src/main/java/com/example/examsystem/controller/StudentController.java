@@ -42,11 +42,6 @@ public class StudentController {
         return "redirect:/studentLoginPage";
     }
 
-    @RequestMapping("/studentLoginPage")
-    public String loginPage() {
-        return "loginPage";
-    }
-
     @RequestMapping("/studentMainPage")
     public String mainPage(Model model) {
         Exam exam = examService.getRunningExam();
@@ -79,14 +74,20 @@ public class StudentController {
         return "student/studentSubmitListPage";
     }
 
+    @ResponseBody
     @RequestMapping("/deleteAnswerFile")
-    public void deleteTeacher(@RequestParam("id") int id, HttpSession session) throws IOException {
+    public void deleteTeacher(@RequestParam("id") int id, HttpSession session){
         StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerById(id);
         Exam exam = examService.getRunningExam();
         Student student = (Student) session.getAttribute("student");
         String pathString = Setting.uploadPath + exam.getName() + File.separator +
                 student.getsClass() + File.separator + student.getId() + File.separator + studentAnswer.getAnswerFileName();
-        Files.deleteIfExists(Paths.get(pathString));
+        System.out.println(pathString);
+        try {
+            Files.deleteIfExists(Paths.get(pathString));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         studentAnswerService.deleteStudentAnswerById(id);
     }
 
