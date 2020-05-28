@@ -3,7 +3,10 @@ package com.example.examsystem.controller;
 import com.example.examsystem.entity.Exam;
 import com.example.examsystem.entity.Setting;
 import com.example.examsystem.entity.Student;
+import com.example.examsystem.entity.StudentAnswer;
 import com.example.examsystem.service.ExamServiceImpl;
+import com.example.examsystem.service.SettingServiceImpl;
+import com.example.examsystem.service.StudentAnswerServiceImpl;
 import com.example.examsystem.service.StudentServiceImpl;
 import com.example.examsystem.utils.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 public class StudentController {
@@ -29,8 +31,10 @@ public class StudentController {
     StudentServiceImpl studentService;
     @Autowired
     ExamServiceImpl examService;
-
-
+    @Autowired
+    StudentAnswerServiceImpl studentAnswerService;
+    @Autowired
+    SettingServiceImpl settingService;
 
     @RequestMapping("/studentLogout")
     public String logout(HttpSession session) {
@@ -50,12 +54,58 @@ public class StudentController {
         model.addAttribute("type", "main");
         return "student/studentMainPage";
     }
+
     @RequestMapping("/studentSubmitListPage")
-    public String submitListPage(Model model) {
+    public String submitListPage(Model model, HttpSession session) {
         Exam exam = examService.getRunningExam();
+        Student student = (Student) session.getAttribute("student");
+        Setting setting = settingService.getSetting();
+        List<StudentAnswer> studentAnswers = studentAnswerService.getStudentAnswers(student.getId());
+        model.addAttribute("fileSizeStatus", "");
+        for (StudentAnswer studentAnswer :
+                studentAnswers) {
+            if (studentAnswer.getAnswerFileSize() > setting.getUploadBytesUpper()) {
+                model.addAttribute("fileSizeStatus", String.format("上传文件大小超出规定的最大值(%d),请检查所提交的文件", setting.getUploadBytesUpper()));
+                break;
+            }
+            if (studentAnswer.getAnswerFileSize() <= setting.getUploadBytesLower()) {
+                model.addAttribute("fileSizeStatus", String.format("上传文件大小小于或等于规定的最小值(%d),请检查所提交的文件", setting.getUploadBytesLower()));
+                break;
+            }
+        }
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
         model.addAttribute("exam", exam);
         model.addAttribute("type", "submitList");
         return "student/studentSubmitListPage";
+    }
+
+    @RequestMapping("/deleteAnswerFile")
+    public void deleteTeacher(@RequestParam("id") int id, HttpSession session) throws IOException {
+        StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerById(id);
+        Exam exam = examService.getRunningExam();
+        Student student = (Student) session.getAttribute("student");
+        String pathString = Setting.uploadPath + exam.getName() + "/" +
+                student.getsClass() + "/" + student.getId() + "/" + studentAnswer.getAnswerFileName();
+        Files.deleteIfExists(Paths.get(pathString));
+        studentAnswerService.deleteStudentAnswerById(id);
+    }
+
+    @ResponseBody
+    @RequestMapping("/studentSubmitList")
+    public Map<String, Object> submitList(HttpSession session, @RequestParam("page") int page, @RequestParam("limit") int limit) {
+        Student student = (Student) session.getAttribute("student");
+        List<StudentAnswer> studentAnswers = studentAnswerService.getStudentAnswerLimitBy(student.getId(), page, limit);
+        int studentAnswerCount = studentAnswerService.getStudentAnswerCount(student.getId());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", studentAnswerCount);
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", studentAnswers);
+        //返回给前端
+        return tableData;
     }
 
     @ResponseBody
@@ -105,6 +155,7 @@ public class StudentController {
     @RequestMapping(value = "/uploadAnswerFile", method = RequestMethod.POST)
     @ResponseBody
     public String uploadSource(@RequestParam("file") MultipartFile file, HttpSession session) {
+        Exam exam = examService.getRunningExam();
         Student student = (Student) session.getAttribute("student");
         System.out.println(student.getsClass());
         System.out.println(file);
@@ -122,9 +173,16 @@ public class StudentController {
             }
         }
 
-        if (files != null)
+        if (files != null) {
+            StudentAnswer studentAnswer = new StudentAnswer();
+            studentAnswer.setStudentId(student.getId());
+            studentAnswer.setExamId(exam.getId());
+            studentAnswer.setAnswerFileName(files.getName());
+            studentAnswer.setAnswerFileSize((int) files.length());
+            studentAnswer.setAnswerFileTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+            studentAnswerService.insertStudentAnswer(studentAnswer);
             return "{\"code\":0,\"msg\":\"" + files.getAbsolutePath() + "\"}";
-        else
+        } else
             return "{\"code\":-1,\"msg\":\"}";
     }
 

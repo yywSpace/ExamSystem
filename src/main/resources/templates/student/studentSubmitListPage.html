@@ -9,6 +9,21 @@
             height: 95%;
         }
 
+        .left {
+            float: left;
+            height: 100%;
+            margin-right: 50px;
+        }
+
+        .right {
+            overflow: auto;
+            height: 100%;
+        }
+
+        .hide-element {
+            visibility: hidden;
+        }
+
         .content {
             height: 100%;
             width: 80%;
@@ -24,16 +39,30 @@
         <span th:text="${exam.getName()}"></span>考试，正在进行中
     </blockquote>
     <h1 style="margin-top: 10px;">已上传文件列表</h1>
-    <div>
-        <table class="layui-hide" id="fileTable" lay-filter="fileTable"></table>
+    <script type="text/html" id="operationCell">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <table class="layui-hide" id="fileTable" lay-filter="fileTable"></table>
 
+    <div style="margin-top: 10px;height: 20%">
+        <div class="left">
+            <h1>答案上传</h1>
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px">
+                请按照考试要求将答案文件打包，再进行上传。同名文件多次上传将会覆盖。
+            </blockquote>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn layui-btn-normal" id="selectAnswer">选择文件</button>
+                <button type="button" class="layui-btn" id="uploadFile">开始上传</button>
+            </div>
+        </div>
+        <div class="right"
+             th:class="${fileSizeStatus == '' ? 'right hide-element' : 'right'}"
+             style=" display: flex;align-items:center">
+            <img alt="图标" src="images/student/warn.png" height="40px">
+            <span th:text="${fileSizeStatus}"></span>
+        </div>
+    </div>
 
-    </div>
-    <h1>答案上传</h1>
-    <div class="layui-upload">
-        <button type="button" class="layui-btn layui-btn-normal" id="selectAnswer">选择文件</button>
-        <button type="button" class="layui-btn" id="uploadFile">开始上传</button>
-    </div>
 </div>
 
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -43,16 +72,15 @@
         var table = layui.table;
         table.render({
             elem: '#fileTable'
-            , url: '/teacherList'
+            , url: '/studentSubmitList'
             , limit: [[${pageSize}]]
-            , toolbar: true
-            , defaultToolbar: ['filter', 'exports', 'print']
             , title: '提交信息表'
             , cols: [
                 [
-                    {field: 'name', title: '文件名', align: "center"}
-                    , {field: 'fullName', title: '文件大小', align: "center"}
-                    , {field: 'manager', title: '上传时间', align: "center"}
+                    {field: 'answerFileName', title: '文件名', align: "center"}
+                    , {field: 'answerFileSize', title: '文件大小', align: "center"}
+                    , {field: 'answerFileTime', title: '上传时间', align: "center"}
+                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
                 ]
             ]
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -67,11 +95,34 @@
             elem: '#selectAnswer'
             , url: 'uploadAnswerFile' //改成您自己的上传接口
             , auto: false
+            , accept: 'file'
             //,multiple: true
             , bindAction: '#uploadFile'
             , done: function (res) {
+                location.reload();
                 layer.msg(res.msg);
                 console.log(res)
+            }
+        });
+        //监听行工具事件
+        table.on('tool(fileTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('确定要删除文件' + data.answerFileName + '？', function (index) {
+                    $.ajax({
+                        url: "/deleteAnswerFile",
+                        data: {
+                            id: data.id//参数
+                        },
+                        type: "POST",
+                        success: function (re) {
+                            console.log(re);
+                        }
+                    });
+                    obj.del();
+                    layer.close(index);
+                });
             }
         });
     });

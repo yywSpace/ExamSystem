@@ -38,7 +38,8 @@
     </blockquote>
     <div class="left">
         <h1>试卷下载</h1>
-        <a th:href="@{/downloadExamPaper}" class="layui-btn layui-btn-normal" style="margin-top: 10px;width: 120px">下载</a>
+        <a th:href="@{/downloadExamPaper}" class="layui-btn layui-btn-normal"
+           style="margin-top: 10px;width: 120px">下载</a>
     </div>
 
     <div class="right">
@@ -60,11 +61,12 @@
         var upload = layui.upload;
         upload.render({
             elem: '#selectAnswer'
-            ,url: 'uploadAnswerFile' //改成您自己的上传接口
-            ,auto: false
+            , url: 'uploadAnswerFile' //改成您自己的上传接口
+            , auto: false
+            , accept: 'file'
             //,multiple: true
-            ,bindAction: '#uploadFile'
-            ,done: function(res){
+            , bindAction: '#uploadFile'
+            , done: function (res) {
                 layer.msg(res.msg);
                 console.log(res)
             }
