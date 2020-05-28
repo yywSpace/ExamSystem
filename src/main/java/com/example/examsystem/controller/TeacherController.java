@@ -1,12 +1,10 @@
 package com.example.examsystem.controller;
 
-import com.example.examsystem.entity.Exam;
 import com.example.examsystem.entity.Teacher;
 import com.example.examsystem.service.ExamServiceImpl;
 import com.example.examsystem.service.TeacherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,7 +34,7 @@ public class TeacherController {
     @RequestMapping("/teacherLogout")
     public String logout(HttpSession session) {
         session.setAttribute("teacher", null);
-        return "redirect:/teacherLoginPage";
+        return "redirect:/login";
     }
 
     @RequestMapping("/teacherMainPage")

@@ -91,7 +91,7 @@
         var upload = layui.upload;
         upload.render({
             elem: '#selectAnswer'
-            , url: 'uploadAnswerFile' //改成您自己的上传接口
+            , url: 'studentUploadAnswerFile' //改成您自己的上传接口
             , auto: false
             , accept: 'file'
             //,multiple: true
@@ -109,7 +109,7 @@
             if (obj.event === 'del') {
                 layer.confirm('确定要删除文件' + data.answerFileName + '？', function (index) {
                     $.ajax({
-                        url: "deleteAnswerFile",
+                        url: "studentDeleteAnswerFile",
                         data: {
                             id: data.id//参数
                         },

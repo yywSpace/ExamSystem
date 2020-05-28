@@ -112,7 +112,7 @@
         var table = layui.table;
         table.render({
             elem: '#test'
-            , url: '/teacherList'
+            , url: '/adminTeacherList'
             , limit: [[${pageSize}]]
             , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
 
@@ -141,7 +141,7 @@
                     layer.confirm('确定要删除选中数据吗？', function (index) {
                         data.forEach(function (item) {
                             $.ajax({
-                                url: "/deleteTeacher",
+                                url: "/adminDeleteTeacher",
                                 data: {
                                     id: item.id//参数
                                 },
@@ -166,7 +166,7 @@
             if (obj.event === 'del') {
                 layer.confirm('确定要删除教师' + data.fullName + '？', function (index) {
                     $.ajax({
-                        url: "/deleteTeacher",
+                        url: "/adminDeleteTeacher",
                         data: {
                             id: data.id//参数
                         },
@@ -189,7 +189,6 @@
                 $("#id").val(data.id);
                 $("#name").val(data.name);
                 $("#fullName").val(data.fullName);
-                $("#password").val(data.password);
                 $('#manager').attr("checked", data.manager); //注意这里使用的是attr()
                 layui.form.render(); //重新渲染显示效果
             }
@@ -217,7 +216,7 @@
             if (teacherSubmitBtn.text() === '提交') {
                 // layer.msg(JSON.stringify(data.field));
                 $.ajax({
-                    url: "/insertTeacher",
+                    url: "/adminInsertTeacher",
                     async: false,
                     type: "POST",
                     dataType: "text",

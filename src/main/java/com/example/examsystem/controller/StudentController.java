@@ -39,7 +39,7 @@ public class StudentController {
     @RequestMapping("/studentLogout")
     public String logout(HttpSession session) {
         session.setAttribute("student", null);
-        return "redirect:/studentLoginPage";
+        return "redirect:/login";
     }
 
     @RequestMapping("/studentMainPage")
@@ -75,8 +75,8 @@ public class StudentController {
     }
 
     @ResponseBody
-    @RequestMapping("/deleteAnswerFile")
-    public void deleteTeacher(@RequestParam("id") int id, HttpSession session){
+    @RequestMapping("/studentDeleteAnswerFile")
+    public void deleteTeacher(@RequestParam("id") int id, HttpSession session) {
         StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerById(id);
         Exam exam = examService.getRunningExam();
         Student student = (Student) session.getAttribute("student");
@@ -110,7 +110,7 @@ public class StudentController {
     }
 
     @ResponseBody
-    @RequestMapping("/downloadExamPaper")
+    @RequestMapping("/studentDownloadExamPaper")
     public String downloadExamPaper(HttpServletResponse response) {
         Exam exam = examService.getRunningExam();
         String filePath = Setting.uploadPath + exam.getName() + File.separator + exam.getPaperName();
@@ -153,7 +153,7 @@ public class StudentController {
         return "下载失败";
     }
 
-    @RequestMapping(value = "/uploadAnswerFile", method = RequestMethod.POST)
+    @RequestMapping(value = "/studentUploadAnswerFile", method = RequestMethod.POST)
     @ResponseBody
     public String uploadSource(@RequestParam("file") MultipartFile file, HttpSession session) {
         Exam exam = examService.getRunningExam();
@@ -175,13 +175,18 @@ public class StudentController {
         }
 
         if (files != null) {
-            StudentAnswer studentAnswer = new StudentAnswer();
+            StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerByFileName(student.getId(), files.getName());
+            if (studentAnswer == null)
+                studentAnswer = new StudentAnswer();
             studentAnswer.setStudentId(student.getId());
             studentAnswer.setExamId(exam.getId());
             studentAnswer.setAnswerFileName(files.getName());
             studentAnswer.setAnswerFileSize((int) files.length());
             studentAnswer.setAnswerFileTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-            studentAnswerService.insertStudentAnswer(studentAnswer);
+            if (studentAnswer.getId() == 0)
+                studentAnswerService.insertStudentAnswer(studentAnswer);
+            else
+                studentAnswerService.updateStudentAnswer(studentAnswer);
             return "{\"code\":0,\"msg\":\"" + files.getAbsolutePath() + "\"}";
         } else
             return "{\"code\":-1,\"msg\":\"}";
@@ -193,6 +198,7 @@ public class StudentController {
         Student student = studentService.login(id, name);
         if (student != null) {
             Exam exam = examService.getRunningExam();
+            System.out.println(exam);
             if (exam == null)
                 return "no_exam";
             else

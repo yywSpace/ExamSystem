@@ -46,7 +46,7 @@ public class AdminController {
         return "error";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping(value = {"/", "/login"})
     public String loginPage(Model model) {
         Exam exam = examService.getRunningExam();
         model.addAttribute("exam", exam);
@@ -56,7 +56,7 @@ public class AdminController {
     @RequestMapping("/adminLogout")
     public String logout(HttpSession session) {
         session.setAttribute("admin", null);
-        return "redirect:/adminLoginPage";
+        return "redirect:/login";
     }
 
     @RequestMapping("/adminExamManagerPage")
@@ -164,13 +164,13 @@ public class AdminController {
     }
 
 
-    @RequestMapping("/deleteTeacher")
+    @RequestMapping("/adminDeleteTeacher")
     public void deleteTeacher(@RequestParam("id") int id) {
         teacherService.deleteTeacherById(id);
     }
 
     @ResponseBody
-    @RequestMapping("/insertTeacher")
+    @RequestMapping("/adminInsertTeacher")
     public void insertTeacher(Teacher teacher) {
         System.out.println(teacher.getName());
         teacher.setPassword(PasswordUtil.getMD5(teacher.getPassword()));
@@ -196,7 +196,7 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping("/teacherList")
+    @RequestMapping("/adminTeacherList")
     public Map<String, Object> teacherList(@RequestParam("page") int page, @RequestParam("limit") int limit) {
         List<Teacher> teacherList = teacherService.getTeacherLimitBy(page, limit);
         int teacherCount = teacherService.getTeacherCount();

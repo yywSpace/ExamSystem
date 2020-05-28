@@ -59,4 +59,9 @@ public class StudentAnswerServiceImpl implements StudentAnswerService {
     public StudentAnswer getStudentAnswerById(int id) {
         return studentAnswerMapper.getStudentAnswerById(id);
     }
+
+    @Override
+    public StudentAnswer getStudentAnswerByFileName(String studentId, String fileName) {
+        return studentAnswerMapper.getStudentAnswerByFileName(studentId, fileName);
+    }
 }

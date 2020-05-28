@@ -5,7 +5,7 @@ import com.example.examsystem.entity.StudentAnswer;
 import java.util.List;
 
 public interface StudentAnswerService {
-    List<StudentAnswer> getStudentAnswerLimitBy(String studentId,int page, int pageSize);
+    List<StudentAnswer> getStudentAnswerLimitBy(String studentId, int page, int pageSize);
 
     int getStudentAnswerCount(String studentId);
 
@@ -18,5 +18,8 @@ public interface StudentAnswerService {
     void deleteStudentAnswerByExamId(int examId);
 
     void deleteStudentAnswerById(int id);
+
     StudentAnswer getStudentAnswerById(int id);
+
+    StudentAnswer getStudentAnswerByFileName(String studentId, String fileName);
 }

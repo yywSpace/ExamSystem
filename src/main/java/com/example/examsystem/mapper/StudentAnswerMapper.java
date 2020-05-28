@@ -27,8 +27,12 @@ public interface StudentAnswerMapper {
 
     @Select("select count(*) from studentAnswer where studentId = #{studentId}  and examId = #{examId}")
     int getStudentAnswerCount(String studentId, int examId);
+
     @Select("select * from studentAnswer where id = #{id}")
     StudentAnswer getStudentAnswerById(int id);
+
+    @Select("select * from studentAnswer where studentId = #{studentId} and answerFileName=#{fileName}")
+    StudentAnswer getStudentAnswerByFileName(String studentId, String fileName);
 
     @Select("select * from studentAnswer where studentId = #{studentId}  and examId = #{examId} order by id desc limit #{start},#{pageSize}")
     List<StudentAnswer> getStudentAnswerLimitBy(String studentId, int examId, int start, int pageSize);

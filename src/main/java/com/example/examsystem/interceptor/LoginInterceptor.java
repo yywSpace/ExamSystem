@@ -22,6 +22,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         Student student = (Student) session.getAttribute("student");
         Teacher teacher = (Teacher) session.getAttribute("teacher");
         Admin admin = (Admin) session.getAttribute("admin");
+        if (request.getServletPath().contains("Login"))
+            return true;
         if (request.getServletPath().startsWith("/admin")) {
             if (admin == null)
                 response.sendRedirect("/login");
@@ -37,8 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 response.sendRedirect("/login");
             return teacher != null;
         }
-        response.sendRedirect("/login");
-        return false;
+        return true;
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
