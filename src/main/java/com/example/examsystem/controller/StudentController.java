@@ -84,8 +84,8 @@ public class StudentController {
         StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerById(id);
         Exam exam = examService.getRunningExam();
         Student student = (Student) session.getAttribute("student");
-        String pathString = Setting.uploadPath + exam.getName() + "/" +
-                student.getsClass() + "/" + student.getId() + "/" + studentAnswer.getAnswerFileName();
+        String pathString = Setting.uploadPath + exam.getName() + File.separator +
+                student.getsClass() + File.separator + student.getId() + File.separator + studentAnswer.getAnswerFileName();
         Files.deleteIfExists(Paths.get(pathString));
         studentAnswerService.deleteStudentAnswerById(id);
     }
@@ -112,7 +112,7 @@ public class StudentController {
     @RequestMapping("/downloadExamPaper")
     public String downloadExamPaper(HttpServletResponse response) {
         Exam exam = examService.getRunningExam();
-        String filePath = Setting.uploadPath + exam.getName() + "/" + exam.getPaperName();
+        String filePath = Setting.uploadPath + exam.getName() + File.separator + exam.getPaperName();
         File file = new File(filePath);
         if (file.exists()) {
 //            response.setContentType("application/force-download");// 设置强制下载不打开
@@ -159,7 +159,7 @@ public class StudentController {
         Student student = (Student) session.getAttribute("student");
         System.out.println(student.getsClass());
         System.out.println(file);
-        String pathString = Setting.uploadPath + "java/" + student.getsClass() + "/" + student.getId() + "/";
+        String pathString = Setting.uploadPath + exam.getName() + File.separator + student.getsClass() + File.separator + student.getId() + File.separator;
         File files = null;
         if (file != null) {
             Path filePath = Paths.get(pathString);
@@ -198,20 +198,23 @@ public class StudentController {
                 model.addAttribute("exam", exam);
 
             System.out.println(student.getIp());
-            // ip
-            if (NetworkUtil.getLocalHostLANAddress() == null) {
-                if ("127.0.0.1".equals(student.getIp()))
-                    return "ip_error";
-            } else if (!NetworkUtil.getLocalHostLANAddress().getHostAddress().equals(student.getIp()))
-                return "ip_error";
 
-            if (student.getIp() == null) {
+            if (student.getIp() == null || student.getIp().equals("")) {
                 if (NetworkUtil.getLocalHostLANAddress() == null)
                     student.setIp("127.0.0.1");
                 else
                     student.setIp(NetworkUtil.getLocalHostLANAddress().getHostAddress());
                 studentService.updateStudent(student);
             }
+
+            // ip
+            if (NetworkUtil.getLocalHostLANAddress() == null) {
+                if (!"127.0.0.1".equals(student.getIp()))
+                    return "ip_error";
+            } else if (!NetworkUtil.getLocalHostLANAddress().getHostAddress().equals(student.getIp()))
+                return "ip_error";
+
+
             session.setAttribute("student", student);
             return "success";
         }
