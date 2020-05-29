@@ -16,4 +16,6 @@ public interface StudentService {
     int getStudentCount();
 
     List<Student> getStudentList();
+
+    void clearIp();
 }

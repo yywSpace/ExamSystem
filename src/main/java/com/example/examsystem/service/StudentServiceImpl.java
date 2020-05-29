@@ -47,4 +47,9 @@ public class StudentServiceImpl implements StudentService {
     public List<Student> getStudentList() {
         return studentMapper.getStudentList();
     }
+
+    @Override
+    public void clearIp() {
+        studentMapper.clearIp();
+    }
 }

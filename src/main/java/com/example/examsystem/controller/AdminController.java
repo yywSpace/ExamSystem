@@ -4,10 +4,8 @@ import com.example.examsystem.entity.Admin;
 import com.example.examsystem.entity.Exam;
 import com.example.examsystem.entity.Setting;
 import com.example.examsystem.entity.Teacher;
-import com.example.examsystem.service.AdminServiceImpl;
-import com.example.examsystem.service.ExamServiceImpl;
-import com.example.examsystem.service.SettingServiceImpl;
-import com.example.examsystem.service.TeacherServiceImpl;
+import com.example.examsystem.service.*;
+import com.example.examsystem.utils.FileUtil;
 import com.example.examsystem.utils.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,10 @@ public class AdminController {
 
     @Autowired
     ExamServiceImpl examService;
+    @Autowired
+    StudentServiceImpl studentService;
+    @Autowired
+    StudentExamServiceImpl studentExamService;
 
     @ResponseBody
     @RequestMapping("/adminLogin")
@@ -107,7 +110,14 @@ public class AdminController {
     @ResponseBody
     @RequestMapping("/clearExam")
     public void clearExam(int id) {
-        examService.clearExam(id);
+        Exam exam = examService.clearExam(id);
+        String examPath = Setting.uploadPath + exam.getName();
+        // 文件
+        FileUtil.deleteAll(new File(examPath));
+        // 考试与考生
+        studentExamService.deleteStudentExamByExamId(exam.getId());
+        // ip置空
+        studentService.clearIp();
     }
 
 

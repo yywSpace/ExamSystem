@@ -27,6 +27,11 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public Exam getExamById(int id) {
+        return examMapper.getExamById(id);
+    }
+
+    @Override
     public int getExamCount() {
         return examMapper.getExamCount();
     }
@@ -47,11 +52,10 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public void clearExam(int id) {
-        // TODO: 2020/5/12 做清理工作
-
+    public Exam clearExam(int id) {
         Exam exam = examMapper.getExamById(id);
         exam.setCleaned(true);
         examMapper.updateExam(exam);
+        return exam;
     }
 }

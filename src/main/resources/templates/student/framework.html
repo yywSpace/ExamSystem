@@ -8,8 +8,7 @@
 <body>
 <div class="layui-header" th:fragment="header">
     <ul class="layui-nav layui-bg-blue">
-        <li style="position:relative;display:inline-block;*display:inline;
-        *zoom:1;vertical-align:middle;line-height:60px;margin-right: 40px">
+        <li style="position:relative;display:inline-block;*display:inline;*zoom:1;vertical-align:middle;line-height:60px;margin-right: 40px;margin-left: 140px">
             <img alt="图标" src="images/examIcon.png" class="layui-nav-img">
             上机考试系统
         </li>
@@ -29,7 +28,7 @@
                 <span th:text="${session.student.name}"></span>
             </a>
         </li>
-        <li class="layui-nav-item">
+        <li class="layui-nav-item" style="margin-right: 140px">
             <a href="javascript:;" th:href="@{/adminLogout}">注销</a>
         </li>
     </ul>

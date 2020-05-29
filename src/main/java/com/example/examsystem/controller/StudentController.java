@@ -8,6 +8,7 @@ import com.example.examsystem.service.ExamServiceImpl;
 import com.example.examsystem.service.SettingServiceImpl;
 import com.example.examsystem.service.StudentAnswerServiceImpl;
 import com.example.examsystem.service.StudentServiceImpl;
+import com.example.examsystem.utils.FileUtil;
 import com.example.examsystem.utils.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -114,43 +114,7 @@ public class StudentController {
     public String downloadExamPaper(HttpServletResponse response) {
         Exam exam = examService.getRunningExam();
         String filePath = Setting.uploadPath + exam.getName() + File.separator + exam.getPaperName();
-        File file = new File(filePath);
-        if (file.exists()) {
-//            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;fileName=" + exam.getPaperName());// 设置文件名
-            byte[] buffer = new byte[1024];
-            FileInputStream fis = null;
-            BufferedInputStream bis = null;
-            try {
-                fis = new FileInputStream(file);
-                bis = new BufferedInputStream(fis);
-                OutputStream os = response.getOutputStream();
-                int i = bis.read(buffer);
-                while (i != -1) {
-                    os.write(buffer, 0, i);
-                    i = bis.read(buffer);
-                }
-                return "下载成功";
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (bis != null) {
-                    try {
-                        bis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return "下载失败";
+        return FileUtil.download(new File(filePath), response);
     }
 
     @RequestMapping(value = "/studentUploadAnswerFile", method = RequestMethod.POST)

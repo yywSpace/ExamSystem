@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考前操作</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;margin-top: 20px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统考前操作</h1>
+    </div>
+    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+        <h2 style="margin-bottom: 10px">添加考试</h2>
+        <form class="layui-form" id="exam_form" method="post"
+              style="display: flex;justify-content: start;align-items: center">
+            <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="考试名称"
+                   class="layui-input" style="width: 200px;margin-right: 5px;">
+            <input type="text" name="startTime" class="layui-input" id="dateTime" placeholder="考试时间"
+                   style="width: 200px;margin-right: 5px;">
+            <input type="checkbox" name="autoStart" title="自动开始">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit_button">提交</button>
+        </form>
+    </div>
+
+    <div>
+        <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
+
+        <script type="text/html" id="operationCell">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="modify">修改</a>
+        </script>
+
+        <script type="text/html" id="cellIcon">
+            {{#  if(d.replace){ }}
+            <i class="layui-icon layui-icon-ok"></i>
+            {{#  } else { }}
+            <i class="layui-icon layui-icon-close"></i>
+            {{#  } }}
+        </script>
+    </div>
+
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'laydate', 'table'], function () {
+        var laydate = layui.laydate,
+            form = layui.form;
+        var table = layui.table;
+
+        form.on('submit(submit_button)', function (data) {
+            layer.confirm('确定要添加考试吗？', function (index) {
+                $.ajax({
+                    url: "/teacherInsertExam",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field,
+                    success() {
+                        $("#exam_form").submit();
+                        layer.msg("添加成功")
+                    }
+                });
+                layer.close(index);
+            });
+            return false;
+        });
+        //日期时间选择器
+        laydate.render({
+            elem: '#dateTime'
+            , type: 'datetime'
+        });
+
+        var cellIconTemp = $("#cellIcon");
+        table.render({
+            elem: '#examTable'
+            , url: '/examList'
+            , limit: [[${pageSize}]]
+            , defaultToolbar: ['filter', 'exports', 'print']
+            , title: '教师管理表'
+            , cols: [
+                [
+                    {field: 'name', title: '考试名称', align: "center"}
+                    , {field: 'startTime', title: '考试时间', align: "center", width: 200}
+                    , {
+                    field: 'autoStart',
+                    title: '自动开始',
+                    align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "autoStart")
+                }
+                    , {
+                    field: 'uploadExamPaper', title: '上传试卷', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "uploadExamPaper")
+                }
+                    , {
+                    field: 'running', title: '进行中', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "running")
+                }
+                    , {
+                    field: 'finished', title: '已结束', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "finished")
+                }
+                    , {
+                    field: 'archived', title: '已归档', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "archived")
+                }
+                    , {
+                    field: 'cleaned', title: '已清理', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "cleaned")
+                }
+                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
+                ]
+            ]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['prev', 'page', 'next', 'skip', 'count']
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(examTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'modify') {
+                location.href = "teacherModifyExamInfoPage?id=" + data.id
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

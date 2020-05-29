@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,32 +7,49 @@
 </head>
 <body>
 <div class="layui-header" th:fragment="header">
-<ul class="layui-nav layui-bg-blue">
-    <li style="position:relative;display:inline-block;*display:inline;
-        *zoom:1;vertical-align:middle;line-height:60px;margin-right: 40px;margin-left: 150px">
-    <img alt="图标" src="images/examIcon.png" class="layui-nav-img">
-    上机考试系统
-    </li>
-    <li class="layui-nav-item layui-this"><a href="" th:href="@{/teacherMainPage}">首页</a></li>
-    <li class="layui-nav-item"><a href="">考前操作</a></li>
-    <li class="layui-nav-item"><a href="">考中操作</a></li>
-    <li class="layui-nav-item"><a href="">考后操作</a></li>
-</ul>
-<ul class="layui-nav layui-layout-right layui-bg-blue">
-    <li class="layui-nav-item" lay-unselect="">
-        <a href="javascript:;">
-            <img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
-            <span th:text="${session.teacher.name}"></span>
-            <span class="layui-nav-more"></span>
-        </a>
-        <dl class="layui-nav-child  layui-anim layui-anim-upbit">
-            <dd><a href="javascript:;" th:href="@{/adminInfoPage}">修改信息</a></dd>
-        </dl>
-    </li>
-    <li class="layui-nav-item">
-        <a href="javascript:;" th:href="@{/adminLogout}">注销</a>
-    </li>
-</ul>
+    <ul class="layui-nav layui-bg-blue">
+        <li style="position:relative;display:inline-block;*display:inline;*zoom:1;vertical-align:middle;line-height:60px;margin-right: 40px;margin-left: 150px">
+            <img alt="图标" src="images/examIcon.png" class="layui-nav-img">
+            上机考试系统
+        </li>
+        <li class="layui-nav-item layui-this"
+            th:class="${type == 'main'? 'layui-nav-item layui-this': 'layui-nav-item'}">
+            <a href="" th:href="@{/teacherMainPage}">首页</a>
+        </li>
+        <li class="layui-nav-item"
+            th:class="${type == 'before'? 'layui-nav-item layui-this': 'layui-nav-item'}">
+            <a href="" th:href="@{/teacherExamBeforePage}">考前操作</a>
+        </li>
+        <li class="layui-nav-item"
+            th:class="${type == 'middle'? 'layui-nav-item layui-this': 'layui-nav-item'}">
+            <a href="">考中操作</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">考试概况</a></dd>
+                <dd><a href="">学生信息</a></dd>
+                <dd><a href="">解除绑定</a></dd>
+                <dd><a href="">通知管理</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"
+            th:class="${type == 'after'? 'layui-nav-item layui-this': 'layui-nav-item'}">
+            <a href="" th:href="@{/teacherExamAfterPage}">考后操作</a>
+        </li>
+    </ul>
+    <ul class="layui-nav layui-layout-right layui-bg-blue">
+        <li class="layui-nav-item" lay-unselect="">
+            <a href="javascript:;">
+                <img alt="头像" src="images/admin/avatar.png" class="layui-nav-img">
+                <span th:text="${session.teacher.name}"></span>
+                <span class="layui-nav-more"></span>
+            </a>
+            <dl class="layui-nav-child  layui-anim layui-anim-upbit">
+                <dd><a href="javascript:;" th:href="@{/adminInfoPage}">修改信息</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item" style="margin-right: 140px;">
+            <a href="javascript:;" th:href="@{/teacherLogout}">注销</a>
+        </li>
+    </ul>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>

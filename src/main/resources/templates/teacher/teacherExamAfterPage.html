@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考前操作</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;margin-top: 20px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统考后操作</h1>
+    </div>
+
+    <div>
+        <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
+
+        <script type="text/html" id="operationCell">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="archive">归档</a>
+            <a class="layui-btn layui-btn-xs" lay-event="clear">清理</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+        <script type="text/html" id="cellIcon">
+            {{#  if(d.replace){ }}
+            <i class="layui-icon layui-icon-ok"></i>
+            {{#  } else { }}
+            <i class="layui-icon layui-icon-close"></i>
+            {{#  } }}
+        </script>
+    </div>
+
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['table'], function () {
+        var table = layui.table;
+
+        var cellIconTemp = $("#cellIcon");
+        table.render({
+            elem: '#examTable'
+            , url: '/examList'
+            , limit: [[${pageSize}]]
+            , defaultToolbar: ['filter', 'exports', 'print']
+            , title: '教师管理表'
+            , cols: [
+                [
+                    {field: 'name', title: '考试名称', align: "center"}
+                    , {field: 'startTime', title: '考试时间', align: "center", width: 200}
+                    , {
+                    field: 'autoStart',
+                    title: '自动开始',
+                    align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "autoStart")
+                }
+                    , {
+                    field: 'uploadExamPaper', title: '上传试卷', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "uploadExamPaper")
+                }
+                    , {
+                    field: 'running', title: '进行中', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "running")
+                }
+                    , {
+                    field: 'finished', title: '已结束', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "finished")
+                }
+                    , {
+                    field: 'archived', title: '已归档', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "archived")
+                }
+                    , {
+                    field: 'cleaned', title: '已清理', align: "center",
+                    templet: cellIconTemp.prop("outerHTML").replace("replace", "cleaned")
+                }
+                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center", width: 160}
+                ]
+            ]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['prev', 'page', 'next', 'skip', 'count']
+            }
+        });
+
+        //监听行工具事件
+        table.on('tool(examTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'archive') {
+                if (!data.finished) {
+                    layer.msg("考试未结束，无法归档");
+                    return
+                }
+                layer.confirm('确定要归档此项考试？', function (index) {
+                    var url = "/archiveExam";
+                    var form = $("<form></form>").attr("action", url).attr("method", "post");
+                    form.append($("<input></input>").attr("type", "hidden").attr("name", "id").attr("value", data.id));
+                    form.appendTo('body').submit().remove();
+                    obj.update({archived:true});
+                    layer.close(index);
+                });
+            } else if (obj.event === 'del') {
+                if ([[${allow}]] === false) {
+                    layer.msg("没有删除权限");
+                    return
+                }
+                if (!data.finished) {
+                    layer.msg("考试未结束，无法删除");
+                    return
+                }
+                if (!data.archived) {
+                    layer.msg("考试未归档，无法删除");
+                    return
+                }
+                if (!data.cleaned) {
+                    layer.msg("考试未清理，无法删除");
+                    return
+                }
+                layer.confirm('确定要删除此项考试？', function (index) {
+                    $.ajax({
+                        url: "/deleteExam",
+                        data: {
+                            id: data.id//参数
+                        },
+                        type: "POST",
+                        success() {
+                            location.reload()
+                        }
+                    });
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'clear') {
+                if ([[${allow}]] === false) {
+                    layer.msg("没有清理权限");
+                    return
+                }
+                if (!data.finished) {
+                    layer.msg("考试未结束，无法清理");
+                    return
+                }
+                if (!data.archived) {
+                    layer.msg("考试未归档，无法清理");
+                    return
+                }
+                layer.confirm('确定要清理此项考试？', function (index) {
+                    $.ajax({
+                        url: "/clearExam",
+                        data: {
+                            id: data.id//参数
+                        },
+                        type: "POST",
+                        success() {
+                            location.reload()
+                        }
+                    })
+                    ;
+                    layer.close(index);
+                });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package com.example.examsystem.entity;
 
-import java.util.Date;
 
 public class Exam {
     private int id;
@@ -8,12 +7,12 @@ public class Exam {
     private String name;
     private String paperName;
     private String startTime;
-    private Boolean autoStart;
-    private Boolean uploadExamPaper;
-    private Boolean running;
-    private Boolean finished;
-    private Boolean archived;
-    private Boolean cleaned;
+    private Boolean autoStart = false;
+    private Boolean uploadExamPaper = false;
+    private Boolean running = false;
+    private Boolean finished = false;
+    private Boolean archived = false;
+    private Boolean cleaned = false;
 
     public String getPaperName() {
         return paperName;
@@ -102,5 +101,18 @@ public class Exam {
 
     public void setCleaned(Boolean cleaned) {
         this.cleaned = cleaned;
+    }
+
+    @Override
+    public String toString() {
+        return "Exam{" +
+                "id=" + id +
+                ", teacherId=" + teacherId +
+                ", name='" + name + '\'' +
+                ", running=" + running +
+                ", finished=" + finished +
+                ", archived=" + archived +
+                ", cleaned=" + cleaned +
+                '}';
     }
 }

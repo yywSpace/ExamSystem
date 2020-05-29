@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考前操作</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;margin-top: 20px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            考试管理</h1>
+    </div>
+    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+        <h2 style="margin-bottom: 10px">编辑考试信息</h2>
+        <form class="layui-form" id="exam_form" method="post"
+              style="display: flex;justify-content: start;align-items: center">
+            <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="考试名称"
+                   th:value="${exam.name}"
+                   class="layui-input" style="width: 200px;margin-right: 5px;">
+            <input type="text" name="startTime" class="layui-input" id="dateTime" placeholder="考试时间"
+                   th:value="${exam.startTime}"
+                   style="width: 200px;margin-right: 5px;">
+            <input type="checkbox" name="autoStart" title="自动开始" th:checked="${exam.autoStart}">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit_button">修改</button>
+        </form>
+    </div>
+    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+        <h2 style="margin-bottom: 10px">上传试卷</h2>
+
+    </div>
+    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+        <h2 style="margin-bottom: 10px">导入学生名单</h2>
+
+    </div>
+    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+        <h2 style="margin-bottom: 10px">开启考试</h2>
+
+    </div>
+
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form;
+        form.on('submit(submit_button)', function (data) {
+            layer.confirm('确定要添加考试吗？', function (index) {
+                $.ajax({
+                    url: "/teacherInsertExam",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field,
+                    success() {
+                        $("#exam_form").submit();
+                        layer.msg("添加成功")
+                    }
+                });
+                layer.close(index);
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

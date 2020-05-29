@@ -9,6 +9,8 @@ public interface ExamService {
 
     Exam getRunningExam();
 
+    Exam getExamById(int id);
+
     int getExamCount();
 
     void insertExam(Exam exam);
@@ -17,5 +19,5 @@ public interface ExamService {
 
     void deleteExamById(int id);
 
-    void clearExam(int id);
+    Exam clearExam(int id);
 }
