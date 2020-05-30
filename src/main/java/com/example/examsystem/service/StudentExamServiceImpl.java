@@ -1,5 +1,6 @@
 package com.example.examsystem.service;
 
+import com.example.examsystem.entity.Student;
 import com.example.examsystem.entity.StudentExam;
 import com.example.examsystem.mapper.StudentExamMapper;
 import com.example.examsystem.mapper.StudentMapper;
@@ -30,12 +31,18 @@ public class StudentExamServiceImpl implements StudentExamService {
     }
 
     @Override
+    public void deleteByExamIdAndStudentId(int examId, String id) {
+        studentExamMapper.deleteByExamIdAndStudentId(examId, id);
+    }
+
+    @Override
     public int getStudentExamCount(int examId) {
         return studentExamMapper.getStudentExamCount(examId);
     }
 
     @Override
-    public List<StudentExam> getStudentExamList(int examId) {
-        return null;
+    public List<Student> getStudentExamListLimitBy(int examId, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        return studentExamMapper.getStudentExamListLimitBy(examId, start, pageSize);
     }
 }

@@ -34,8 +34,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void deleteStudent(Student student) {
-        studentMapper.deleteStudentById(student.getId());
+    public void deleteStudentById(String studentId) {
+        studentMapper.deleteStudentById(studentId);
     }
 
     @Override

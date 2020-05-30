@@ -6,6 +6,12 @@ public class Student {
     private String sClass;
     private String ip;
 
+    public Student(String id, String name, String sClass) {
+        this.id = id;
+        this.name = name;
+        this.sClass = sClass;
+    }
+
     public String getId() {
         return id;
     }

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -111,10 +112,10 @@ public class StudentController {
 
     @ResponseBody
     @RequestMapping("/studentDownloadExamPaper")
-    public String downloadExamPaper(HttpServletResponse response) {
+    public String downloadExamPaper(HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException {
         Exam exam = examService.getRunningExam();
         String filePath = Setting.uploadPath + exam.getName() + File.separator + exam.getPaperName();
-        return FileUtil.download(new File(filePath), response);
+        return FileUtil.download(new File(filePath), response, request);
     }
 
     @RequestMapping(value = "/studentUploadAnswerFile", method = RequestMethod.POST)

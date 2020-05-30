@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>考前操作</title>
+    <title>考后操作</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <style type="text/css">
         html, body {
@@ -22,7 +22,7 @@
 <div th:replace="teacher/framework::header"></div>
 
 <div class="content" style="display: flex; flex-flow: column;">
-    <div style="height: 100px;margin-top: 20px;display: flex; align-items: center">
+    <div style="height: 100px;margin-top: 10px;display: flex; align-items: center">
         <h1>
             <img alt="图标" src="images/teacher/考试.png" height="50px">
             上机考试系统考后操作</h1>
@@ -30,11 +30,15 @@
 
     <div>
         <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
-
         <script type="text/html" id="operationCell">
+            {{#  if(!d.running){ }}
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="archive">归档</a>
             <a class="layui-btn layui-btn-xs" lay-event="clear">清理</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            {{#  } else { }}
+            <a class="layui-btn layui-btn-danger layui-btn-xs" style="background-color: green" lay-event="close">结束考试</a>
+            {{#  } }}
+
         </script>
 
         <script type="text/html" id="cellIcon">
@@ -113,7 +117,7 @@
                     var form = $("<form></form>").attr("action", url).attr("method", "post");
                     form.append($("<input></input>").attr("type", "hidden").attr("name", "id").attr("value", data.id));
                     form.appendTo('body').submit().remove();
-                    obj.update({archived:true});
+                    obj.update({archived: true});
                     layer.close(index);
                 });
             } else if (obj.event === 'del') {
@@ -165,6 +169,21 @@
                         url: "/clearExam",
                         data: {
                             id: data.id//参数
+                        },
+                        type: "POST",
+                        success() {
+                            location.reload()
+                        }
+                    })
+                    ;
+                    layer.close(index);
+                });
+            } else if (obj.event === 'close') {
+                layer.confirm('确定要结束此项考试？', function (index) {
+                    $.ajax({
+                        url: "/closeExam",
+                        data: {
+                            examId: data.id//参数
                         },
                         type: "POST",
                         success() {

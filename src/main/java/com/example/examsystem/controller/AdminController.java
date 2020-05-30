@@ -95,13 +95,6 @@ public class AdminController {
     }
 
     @ResponseBody
-    @RequestMapping("/updateExam")
-    public void updateExam(Exam exam) {
-        examService.updateExam(exam);
-    }
-
-
-    @ResponseBody
     @RequestMapping("/deleteExam")
     public void deleteExam(int id) {
         examService.deleteExamById(id);

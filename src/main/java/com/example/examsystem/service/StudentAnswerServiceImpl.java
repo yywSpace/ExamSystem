@@ -7,6 +7,7 @@ import com.example.examsystem.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,6 +32,8 @@ public class StudentAnswerServiceImpl implements StudentAnswerService {
 
     @Override
     public List<StudentAnswer> getStudentAnswers(String studentId) {
+        if (examService.getRunningExam() == null)
+            return new ArrayList<>();
         return studentAnswerMapper.getStudentAnswers(studentId, examService.getRunningExam().getId());
     }
 

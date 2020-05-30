@@ -5,6 +5,11 @@ public class StudentExam {
     private String studentId;
     private int examId;
 
+    public StudentExam(String studentId, int examId) {
+        this.studentId = studentId;
+        this.examId = examId;
+    }
+
     public int getId() {
         return id;
     }

@@ -22,12 +22,12 @@
 <div th:replace="teacher/framework::header"></div>
 
 <div class="content" style="display: flex; flex-flow: column;">
-    <div style="height: 100px;margin-top: 20px;display: flex; align-items: center">
+    <div style="height: 100px;margin-top: 10px;display: flex; align-items: center">
         <h1>
             <img alt="图标" src="images/teacher/考试.png" height="50px">
             上机考试系统考前操作</h1>
     </div>
-    <div style="margin-top:10px;background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
+    <div style="background-color: #f2f2f2;height: 100px;padding-top: 10px;padding-left: 20px;border-radius: 10px">
         <h2 style="margin-bottom: 10px">添加考试</h2>
         <form class="layui-form" id="exam_form" method="post"
               style="display: flex;justify-content: start;align-items: center">
@@ -44,7 +44,11 @@
         <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
 
         <script type="text/html" id="operationCell">
+            {{#  if(!d.running){ }}
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="modify">修改</a>
+            {{#  } else { }}
+            <button type="button" class="layui-btn layui-btn-disabled">修改</button>
+            {{#  } }}
         </script>
 
         <script type="text/html" id="cellIcon">
@@ -126,7 +130,7 @@
                     field: 'cleaned', title: '已清理', align: "center",
                     templet: cellIconTemp.prop("outerHTML").replace("replace", "cleaned")
                 }
-                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
+                    , {fixed: 'right', title: '操作', templet: '#operationCell', align: "center"}
                 ]
             ]
             , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档

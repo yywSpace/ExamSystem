@@ -3,6 +3,8 @@ package com.example.examsystem.interceptor;
 import com.example.examsystem.entity.Admin;
 import com.example.examsystem.entity.Student;
 import com.example.examsystem.entity.Teacher;
+import com.example.examsystem.service.ExamServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,6 +17,8 @@ import java.io.IOException;
 
 @Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
+    @Autowired
+    ExamServiceImpl examService;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         System.out.println(request.getServletPath());
@@ -30,6 +34,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             return admin != null;
         }
         if (request.getServletPath().startsWith("/student")) {
+            if (examService.getRunningExam() == null) {
+                response.sendRedirect("/login");
+                return false;
+            }
             if (student == null)
                 response.sendRedirect("/login");
             return student != null;
