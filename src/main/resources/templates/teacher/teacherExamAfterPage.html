@@ -22,7 +22,7 @@
 <div th:replace="teacher/framework::header"></div>
 
 <div class="content" style="display: flex; flex-flow: column;">
-    <div style="height: 100px;margin-top: 10px;display: flex; align-items: center">
+    <div style="height: 100px;display: flex; align-items: center">
         <h1>
             <img alt="图标" src="images/teacher/考试.png" height="50px">
             上机考试系统考后操作</h1>
@@ -61,7 +61,7 @@
         var cellIconTemp = $("#cellIcon");
         table.render({
             elem: '#examTable'
-            , url: '/examList'
+            , url: '/teacherExamList'
             , limit: [[${pageSize}]]
             , defaultToolbar: ['filter', 'exports', 'print']
             , title: '教师管理表'

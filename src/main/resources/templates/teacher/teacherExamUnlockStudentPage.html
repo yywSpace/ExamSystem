@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>解锁学生IP</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content-block {
+            background-color: #f2f2f2;
+            height: auto;
+            padding: 10px 0 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统学生信息</h1>
+    </div>
+
+    <div class="content-block">
+        <h2>查找学生信息</h2>
+        <form class="layui-form" method="post">
+            <div style="display: flex;justify-content: start;align-items: center;margin-bottom: 10px">
+                <input type="hidden" name="examId" th:value="${examId}">
+                <input type="text" name="id" autocomplete="off" placeholder="学号"
+                       class="layui-input" style="width: 200px;margin-right: 5px;">
+                <input type="text" name="name" class="layui-input" autocomplete="off" placeholder="姓名"
+                       style="width: 200px;margin-right: 5px;">
+                <input type="text" name="sClass" class="layui-input" autocomplete="off" placeholder="班级"
+                       style="width: 200px;margin-right: 5px;">
+                <button type="submit" class="layui-btn" lay-submit=""
+                        lay-filter="query_student_button">
+                    查找
+                </button>
+            </div>
+
+        </form>
+    </div>
+    <div class="content-block">
+        <h2>通过IP查找学生信息</h2>
+        <form class="layui-form" id="add_student_form" method="post">
+            <div style="display: flex;justify-content: start;align-items: center;margin-bottom: 10px">
+                <input type="hidden" name="examId" th:value="${examId}">
+                <input type="text" name="ip" id="ip" autocomplete="off" placeholder="IP"
+                       class="layui-input" style="width: 200px;margin-right: 5px;">
+                <button type="submit" class="layui-btn" lay-submit=""
+                        lay-filter="query_student_by_ip">
+                    查找
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <div>
+        <script type="text/html" id="operationCell">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">解除</a>
+        </script>
+        <table class="layui-hide" id="studentTable" lay-filter="studentTable"></table>
+    </div>
+
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+        var table = layui.table;
+
+        form.on('submit(query_student_by_ip)', function (data) {
+            table.render({
+                elem: '#studentTable'
+                , url: '/queryStudentListByIP?examId=[[${examId}]]&ip=' + data.field.ip
+                , limit: [[${pageSize}]]
+                , title: '提交信息表'
+                , cols: [
+                    [
+                        {field: 'id', title: '学号', align: "center"}
+                        , {field: 'name', title: '姓名', align: "center"}
+                        , {field: 'sClass', title: '班级', align: "center"}
+                        , {field: 'ip', title: 'IP', align: "center"}
+                        , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
+                    ]
+                ]
+                ,
+                page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                    layout: ['prev', 'page', 'next', 'skip', 'count']
+                }
+            });
+            return false;
+        });
+
+        form.on('submit(query_student_button)', function (data) {
+            table.render({
+                elem: '#studentTable'
+                , url: '/queryStudentList?examId=[[${examId}]]&id='
+                    + data.field.id + "&name=" + data.field.name + "&sClass=" + data.field.sClass
+                , limit: [[${pageSize}]]
+                , title: '提交信息表'
+                , cols: [
+                    [
+                        {field: 'id', title: '学号', align: "center"}
+                        , {field: 'name', title: '姓名', align: "center"}
+                        , {field: 'sClass', title: '班级', align: "center"}
+                        , {field: 'ip', title: 'IP', align: "center"}
+                        , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center"}
+                    ]
+                ]
+                ,
+                page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                    layout: ['prev', 'page', 'next', 'skip', 'count']
+                }
+            });
+            return false;
+        });
+
+        //监听行工具事件
+        table.on('tool(studentTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                $.ajax({
+                    url: "/resetIp",
+                    data: {
+                        id: data.id//参数
+                    },
+                    type: "POST",
+                    success: function (re) {
+                        layer.msg("解除成功");
+                        obj.update({ip: ''});
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

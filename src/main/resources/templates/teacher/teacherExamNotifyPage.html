@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>通知管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+        .content-block {
+            background-color: #f2f2f2;
+            height: auto;
+            padding: 10px 0 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统通知管理</h1>
+    </div>
+    <div class="content-block">
+        <h2>新增通知消息</h2>
+        <form class="layui-form" method="post">
+            <div style="display: flex;justify-content: start;align-items: center;margin-bottom: 10px">
+                <input type="hidden" name="examId" th:value="${examId}">
+                <input type="text" name="content" id="content" autocomplete="off" placeholder="通知消息内容" lay-verify="required"
+                       class="layui-input" style="width: 250px;margin-right: 5px;">
+
+                <button type="submit" class="layui-btn" lay-submit=""
+                        lay-filter="add_notice_button">
+                    添加
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <div>
+        <h2>已有通知消息</h2>
+        <script type="text/html" id="operationCell">
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+        <table class="layui-hide" id="studentTable" lay-filter="studentTable"></table>
+    </div>
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form;
+        var table = layui.table;
+        table.render({
+            elem: '#studentTable'
+            , url: '/messageList?examId=[[${examId}]]'
+            , limit: [[${pageSize}]]
+            , title: '提交信息表'
+            , cols: [
+                [
+                    {field: 'time', title: '时间', align: "center",width:200}
+                    , {field: 'content', title: '内容', align: "left"}
+                    , {fixed: 'right', title: '操作', toolbar: '#operationCell', align: "center",width:100}
+                ]
+            ]
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['prev', 'page', 'next', 'skip', 'count']
+            }
+        });
+        form.on('submit(add_notice_button)', function (data) {
+            $.ajax({
+                url: "/insertMessage",
+                async: false,
+                type: "POST",
+                dataType: "text",
+                data: data.field,
+                success() {
+                    location.reload();
+                    layer.msg("插入成功")
+                }
+            });
+            return false;
+        });
+
+        //监听行工具事件
+        table.on('tool(studentTable)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                $.ajax({
+                    url: "/deleteMessage",
+                    data: {
+                        id: data.id//参数
+                    },
+                    type: "POST",
+                    success: function (re) {
+                        console.log(re);
+                    }
+                });
+                obj.del();
+                layer.close(index);
+            }
+        });
+    });
+</script>
+</body>
+</html>

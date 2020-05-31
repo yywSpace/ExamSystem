@@ -1,13 +1,7 @@
 package com.example.examsystem.controller;
 
-import com.example.examsystem.entity.Exam;
-import com.example.examsystem.entity.Setting;
-import com.example.examsystem.entity.Student;
-import com.example.examsystem.entity.StudentAnswer;
-import com.example.examsystem.service.ExamServiceImpl;
-import com.example.examsystem.service.SettingServiceImpl;
-import com.example.examsystem.service.StudentAnswerServiceImpl;
-import com.example.examsystem.service.StudentServiceImpl;
+import com.example.examsystem.entity.*;
+import com.example.examsystem.service.*;
 import com.example.examsystem.utils.FileUtil;
 import com.example.examsystem.utils.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +30,10 @@ public class StudentController {
     StudentAnswerServiceImpl studentAnswerService;
     @Autowired
     SettingServiceImpl settingService;
+    @Autowired
+    StudentExamServiceImpl studentExamService;
+    @Autowired
+    MessageServiceImpl messageService;
 
     @RequestMapping("/studentLogout")
     public String logout(HttpSession session) {
@@ -47,6 +45,7 @@ public class StudentController {
     public String mainPage(Model model) {
         Exam exam = examService.getRunningExam();
         model.addAttribute("exam", exam);
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
         model.addAttribute("type", "main");
         return "student/studentMainPage";
     }
@@ -97,6 +96,7 @@ public class StudentController {
     public Map<String, Object> submitList(HttpSession session, @RequestParam("page") int page, @RequestParam("limit") int limit) {
         Student student = (Student) session.getAttribute("student");
         List<StudentAnswer> studentAnswers = studentAnswerService.getStudentAnswerLimitBy(student.getId(), page, limit);
+        System.out.println(studentAnswers);
         int studentAnswerCount = studentAnswerService.getStudentAnswerCount(student.getId());
         Map<String, Object> tableData = new HashMap<>();
         //这是layui要求返回的json数据格式
@@ -138,7 +138,6 @@ public class StudentController {
                 e.printStackTrace();
             }
         }
-
         if (files != null) {
             StudentAnswer studentAnswer = studentAnswerService.getStudentAnswerByFileName(student.getId(), files.getName());
             if (studentAnswer == null)
@@ -168,8 +167,11 @@ public class StudentController {
                 return "no_exam";
             else
                 model.addAttribute("exam", exam);
+            StudentExam studentExam = studentExamService.getStudentExamById(id);
 
-            System.out.println(student.getIp());
+            if (studentExam == null) {
+                return "not_in_this_exam";
+            }
 
             if (student.getIp() == null || student.getIp().equals("")) {
                 if (NetworkUtil.getLocalHostLANAddress() == null)
@@ -186,11 +188,30 @@ public class StudentController {
             } else if (!NetworkUtil.getLocalHostLANAddress().getHostAddress().equals(student.getIp()))
                 return "ip_error";
 
-
+            studentExam.setLogin(true);
+            studentExamService.updateStudentExam(studentExam);
             session.setAttribute("student", student);
             return "success";
         }
         return "error";
+    }
+
+    @ResponseBody
+    @RequestMapping("/refreshMessage")
+    public String refreshMessage(int examId, HttpSession session) {
+        Integer messageCount = (Integer) session.getAttribute("messageCount");
+        System.out.println(messageCount);
+        if (messageCount == null) {
+            messageCount = messageService.getMessageCount(examId);
+            session.setAttribute("messageCount", messageCount);
+            return "refresh";
+        } else {
+            if (messageCount != messageService.getMessageCount(examId)) {
+                session.setAttribute("messageCount", messageService.getMessageCount(examId));
+                return "refresh";
+            }
+        }
+        return "don't refresh";
     }
 
 }

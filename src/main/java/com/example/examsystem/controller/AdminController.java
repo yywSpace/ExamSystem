@@ -37,6 +37,8 @@ public class AdminController {
     StudentServiceImpl studentService;
     @Autowired
     StudentExamServiceImpl studentExamService;
+    @Autowired
+    StudentAnswerServiceImpl studentAnswerService;
 
     @ResponseBody
     @RequestMapping("/adminLogin")
@@ -105,6 +107,8 @@ public class AdminController {
     public void clearExam(int id) {
         Exam exam = examService.clearExam(id);
         String examPath = Setting.uploadPath + exam.getName();
+        // 考试文件数据库信息
+        studentAnswerService.deleteStudentAnswerByExamId(exam.getId());
         // 文件
         FileUtil.deleteAll(new File(examPath));
         // 考试与考生

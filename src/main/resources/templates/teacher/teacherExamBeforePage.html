@@ -22,7 +22,7 @@
 <div th:replace="teacher/framework::header"></div>
 
 <div class="content" style="display: flex; flex-flow: column;">
-    <div style="height: 100px;margin-top: 10px;display: flex; align-items: center">
+    <div style="height: 100px;display: flex; align-items: center">
         <h1>
             <img alt="图标" src="images/teacher/考试.png" height="50px">
             上机考试系统考前操作</h1>
@@ -44,10 +44,10 @@
         <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
 
         <script type="text/html" id="operationCell">
-            {{#  if(!d.running){ }}
-            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="modify">修改</a>
+            {{#  if(d.running || d.finished){ }}
+            <button type="button" class="layui-btn layui-btn-xs layui-btn-disabled">修改</button>
             {{#  } else { }}
-            <button type="button" class="layui-btn layui-btn-disabled">修改</button>
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="modify">修改</a>
             {{#  } }}
         </script>
 
@@ -96,7 +96,7 @@
         var cellIconTemp = $("#cellIcon");
         table.render({
             elem: '#examTable'
-            , url: '/examList'
+            , url: '/teacherExamList'
             , limit: [[${pageSize}]]
             , defaultToolbar: ['filter', 'exports', 'print']
             , title: '教师管理表'
@@ -148,6 +148,25 @@
         });
 
     });
+
+    function modifyPwd() {
+        layer.msg("134")
+        // layui.use('layer', function () { //独立版的layer无需执行这一句
+        //     var layer = layui.layer; //独立版的layer无需执行这一句
+        //     layer.open({
+        //         type: 1
+        //         , offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+        //         , id: 'modifyPwd' //防止重复弹出
+        //         , content: '<div style="padding: 20px 100px;">' + 'modifyPwd' + '</div>'
+        //         , btn: '关闭全部'
+        //         , btnAlign: 'c' //按钮居中
+        //         , shade: 0 //不显示遮罩
+        //         , yes: function () {
+        //             layer.closeAll();
+        //         }
+        //     });
+        // });
+    }
 </script>
 </body>
 </html>

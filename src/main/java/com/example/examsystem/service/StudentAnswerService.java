@@ -9,6 +9,8 @@ public interface StudentAnswerService {
 
     int getStudentAnswerCount(String studentId);
 
+    int getStudentAnswerCountByExamId(int examId);
+
     List<StudentAnswer> getStudentAnswers(String studentId);
 
     void insertStudentAnswer(StudentAnswer studentAnswer);

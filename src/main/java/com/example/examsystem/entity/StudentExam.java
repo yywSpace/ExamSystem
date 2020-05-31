@@ -4,6 +4,7 @@ public class StudentExam {
     private int id;
     private String studentId;
     private int examId;
+    private Boolean login;
 
     public StudentExam(String studentId, int examId) {
         this.studentId = studentId;
@@ -32,5 +33,13 @@ public class StudentExam {
 
     public void setExamId(int examId) {
         this.examId = examId;
+    }
+
+    public Boolean getLogin() {
+        return login;
+    }
+
+    public void setLogin(Boolean login) {
+        this.login = login;
     }
 }

@@ -31,6 +31,11 @@ public class StudentAnswerServiceImpl implements StudentAnswerService {
     }
 
     @Override
+    public int getStudentAnswerCountByExamId(int examId) {
+        return studentAnswerMapper.getStudentAnswerCountByExamId(examId);
+    }
+
+    @Override
     public List<StudentAnswer> getStudentAnswers(String studentId) {
         if (examService.getRunningExam() == null)
             return new ArrayList<>();

@@ -109,6 +109,9 @@ public class Exam {
                 "id=" + id +
                 ", teacherId=" + teacherId +
                 ", name='" + name + '\'' +
+                ", paperName='" + paperName + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", autoStart=" + autoStart +
                 ", running=" + running +
                 ", finished=" + finished +
                 ", archived=" + archived +

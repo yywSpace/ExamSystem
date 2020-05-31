@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考试概况</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: 95%;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统考试概况</h1>
+    </div>
+
+    <div style="padding:10px;background-color:#555;color:#FFF;border-radius: 10px">
+        <div th:if="exam == null">
+            <h3>当前没有考试正在进行</h3>
+        </div>
+        <div th:if="exam ne null">
+            <h3>[[${exam.name}]]考试进行情况：</h3>
+            <p>参加考试学生总数： [[${allStudentCount}]]</p>
+            <p>已登陆学生数量：[[${loginCount}]]，未登录学生数量：[[${allStudentCount-loginCount}]]</p>
+            <p>已登陆学生中，提交文件学生数量：[[${uploadCount}]]，未提交文件学生数量：[[${allStudentCount-uploadCount}]]</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+
+</body>
+</html>

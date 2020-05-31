@@ -4,7 +4,7 @@ public class Student {
     private String id;
     private String name;
     private String sClass;
-    private String ip;
+    private String ip = "";
 
     public Student(String id, String name, String sClass) {
         this.id = id;
@@ -42,5 +42,15 @@ public class Student {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", sClass='" + sClass + '\'' +
+                ", ip='" + ip + '\'' +
+                '}';
     }
 }

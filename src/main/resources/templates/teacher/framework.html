@@ -24,10 +24,10 @@
             th:class="${type == 'middle'? 'layui-nav-item layui-this': 'layui-nav-item'}">
             <a href="">考中操作</a>
             <dl class="layui-nav-child">
-                <dd><a href="">考试概况</a></dd>
-                <dd><a href="">学生信息</a></dd>
-                <dd><a href="">解除绑定</a></dd>
-                <dd><a href="">通知管理</a></dd>
+                <dd><a href="" th:href="@{/teacherExamSummaryPage}">考试概况</a></dd>
+                <dd><a href="" th:href="@{/teacherExamStudentInfoPage}">学生信息</a></dd>
+                <dd><a href="" th:href="@{/teacherUnlockStudentPage}">解除绑定</a></dd>
+                <dd><a href="" th:href="@{/teacherNotifyPage}">通知管理</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item"
@@ -43,14 +43,90 @@
                 <span class="layui-nav-more"></span>
             </a>
             <dl class="layui-nav-child  layui-anim layui-anim-upbit">
-                <dd><a href="javascript:;" th:href="@{/adminInfoPage}">修改信息</a></dd>
+                <dd><a th:onclick="modifyPwd()">修改信息</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item" style="margin-right: 140px;">
             <a href="javascript:;" th:href="@{/teacherLogout}">注销</a>
         </li>
     </ul>
+    <script>
+        function modifyPwd() {
+            layui.use('layer', function () { //独立版的layer无需执行这一句
+                var layer = layui.layer; //独立版的layer无需执行这一句
+                layer.open({
+                    type: 1,
+                    title: "修改密码",
+                    area: ['35%', '34%'],
+                    btn: ['确定', '取消'],
+                    content: '<form class="layui-form" id="admin_form" method="post" style="margin-top:20px;margin-right: 40px" lay-filter="example">\n' +
+                        '        <input id="id" type="hidden" name="id"">\n' +
+                        '        <div class="layui-form-item">\n' +
+                        '            <label class="layui-form-label">密码</label>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                <input id="password" type="password" name="password" lay-verify="password" autocomplete="off"\n' +
+                        '                       placeholder="请输入密码"\n' +
+                        '                       class="layui-input form-item">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div class="layui-form-item">\n' +
+                        '            <label class="layui-form-label">确认密码</label>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                <input id="repeat_password" type="password" name="repeat_password" lay-verify="repeat_password"\n' +
+                        '                       autocomplete="off"\n' +
+                        '                       placeholder="请输入密码"\n' +
+                        '                       class="layui-input form-item">\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </form>',
+                    success: function (layero, index) {
+                        $('#id').val([[${session.teacher.id}]]);
+                    }, yes: function (index, layero) {
+
+                    }
+                });
+            });
+        }
+
+        layui.use(['form', 'table'], function () {
+            var form = layui.form;
+            var table = layui.table;
+
+            form.on('submit(submit_button)', function (data) {
+                $.ajax({
+                    url: "/insertStudent?examId=[[${examId}]]",
+                    async: false,
+                    type: "POST",
+                    dataType: "text",
+                    data: data.field,
+                    success() {
+                        location.reload();
+                        layer.msg("插入成功")
+                    }
+                });
+                return false;
+            });
+            form.verify({
+                name: function (value) {
+                    if (value.length < 5) {
+                        return '帐号至少得5个字符';
+                    }
+                },
+                // password: [
+                //     /^[\S]{6,12}$/
+                //     , '密码必须6到12位，且不能出现空格'
+                // ],
+                repeat_password: function (value) {
+                    var rePas = $("#password").val();
+                    if (value !== rePas)
+                        return '两次输入的密码不一致!';
+                }
+            });
+        });
+
+    </script>
 </div>
+
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>
 </body>

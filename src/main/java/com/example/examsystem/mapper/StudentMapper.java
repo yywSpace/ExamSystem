@@ -21,7 +21,7 @@ public interface StudentMapper {
     void deleteStudentById(String id);
 
     @Select("select * from student where id = #{id}")
-    Student getStudentById(String name);
+    Student getStudentById(String id);
 
     @Select("select * from student")
     List<Student> getStudentList();

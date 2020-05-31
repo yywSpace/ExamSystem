@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="layui/css/layui.css">
     <style type="text/css">
         html, body {
-            height: 95%;
+            height: 100%;
         }
 
         .left {
@@ -44,7 +44,7 @@
     </script>
     <table class="layui-hide" id="fileTable" lay-filter="fileTable"></table>
 
-    <div style="margin-top: 10px;height: 20%">
+    <div style="margin-top: 10px;height: 20%;">
         <div class="left">
             <h1>答案上传</h1>
             <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px">
@@ -62,12 +62,51 @@
             <span th:text="${fileSizeStatus}"></span>
         </div>
     </div>
-
+    <div>
+        <h1 style="margin-top: 20px">通知消息</h1>
+        <table style="color: red" class="layui-hide" id="studentTable" lay-filter="studentTable"></table>
+        <script type="text/html" id="timeCell">
+            <span style="color: red;">{{ d.time }}</span>
+        </script>  <script type="text/html" id="contentCell">
+            <span style="color: red;">{{ d.content }}</span>
+        </script>
+    </div>
 </div>
 
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>
 <script>
+    function refreshMessage() {
+        layui.use('table', function () {
+            var table = layui.table;
+            $.ajax({
+                url: "/refreshMessage",
+                async: false,
+                type: "POST",
+                dataType: "text",
+                data: {
+                    examId: [[${exam.id}]]
+                },
+                success(data) {
+                    if (data === 'refresh') {
+                        table.render({
+                            elem: '#studentTable'
+                            , url: '/messageList?examId=[[${exam.id}]]'
+                            , title: '提交信息表'
+                            , cols: [
+                                [
+                                    {field: 'time', title: '时间', align: "center", width: 170, templet: "#timeCell"}
+                                    , {field: 'content', title: '内容', align: "left",templet: "#contentCell"}
+                                ]
+                            ]
+                        });
+                    }
+                }
+            });
+        });
+        setTimeout("refreshMessage()", 1000)
+    }
+
     layui.use(['table', 'upload'], function () {
         var table = layui.table;
         table.render({
@@ -87,7 +126,17 @@
                 layout: ['prev', 'page', 'next', 'skip', 'count']
             }
         });
-
+        table.render({
+            elem: '#studentTable'
+            , url: '/messageList?examId=[[${exam.id}]]'
+            , title: '提交信息表'
+            , cols: [
+                [
+                    {field: 'time', title: '时间', align: "center", width: 170, templet: "#timeCell"}
+                    , {field: 'content', title: '内容', align: "left", templet: "#contentCell"}
+                ]
+            ]
+        });
         var upload = layui.upload;
         upload.render({
             elem: '#selectAnswer'

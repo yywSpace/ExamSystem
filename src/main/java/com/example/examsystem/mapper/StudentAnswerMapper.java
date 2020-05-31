@@ -28,6 +28,9 @@ public interface StudentAnswerMapper {
     @Select("select count(*) from studentAnswer where studentId = #{studentId}  and examId = #{examId}")
     int getStudentAnswerCount(String studentId, int examId);
 
+    @Select("select count(distinct studentId) from studentAnswer where examId = #{examId}")
+    int getStudentAnswerCountByExamId(int examId);
+
     @Select("select * from studentAnswer where id = #{id}")
     StudentAnswer getStudentAnswerById(int id);
 

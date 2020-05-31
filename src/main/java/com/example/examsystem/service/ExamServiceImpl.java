@@ -20,6 +20,17 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
+    public List<Exam> getTeacherExamLimitBy(int teacherId, int page, int pageSize) {
+        int start = (page - 1) * pageSize;
+        return examMapper.getTeacherExamLimitBy(teacherId, start, pageSize);
+    }
+
+    @Override
+    public List<Exam> getAutoStartExamListNotStart() {
+        return examMapper.getAutoStartExamListNotStart();
+    }
+
+    @Override
     public Exam getRunningExam() {
         if (examMapper.getRunningExam().size() == 0)
             return null;
@@ -34,6 +45,10 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public int getExamCount() {
         return examMapper.getExamCount();
+    }
+    @Override
+    public int getTeacherExamCount(int teacherId) {
+        return examMapper.getTeacherExamCount(teacherId);
     }
 
     @Override

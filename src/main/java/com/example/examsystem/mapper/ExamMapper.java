@@ -1,10 +1,9 @@
 package com.example.examsystem.mapper;
 
-import com.example.examsystem.entity.Admin;
 import com.example.examsystem.entity.Exam;
-import com.example.examsystem.entity.Teacher;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
@@ -28,6 +27,9 @@ public interface ExamMapper {
     @Select("select * from exam order by id desc limit #{start},#{pageSize}")
     List<Exam> getExamLimitBy(int start, int pageSize);
 
+    @Select("select * from exam where teacherId =  #{teacherId} order by id desc limit #{start},#{pageSize}")
+    List<Exam> getTeacherExamLimitBy(int teacherId, int start, int pageSize);
+
     @Select("select * from exam where id = ${id}")
     Exam getExamById(int id);
 
@@ -37,5 +39,10 @@ public interface ExamMapper {
     @Select("select count(*) from exam")
     int getExamCount();
 
+    @Select("select count(*) from exam  where teacherId =  #{teacherId}")
+    int getTeacherExamCount(int teacherId);
+
+    @Select("select * from exam where running = 0 and finished = 0 and autoStart = 1")
+    List<Exam> getAutoStartExamListNotStart();
 
 }

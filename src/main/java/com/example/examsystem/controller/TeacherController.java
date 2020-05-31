@@ -30,7 +30,10 @@ import java.util.*;
 @Controller
 public class TeacherController {
     @Autowired
+    StudentAnswerServiceImpl studentAnswerService;
+    @Autowired
     TeacherServiceImpl teacherService;
+
     @Autowired
     StudentExamServiceImpl studentExamService;
 
@@ -41,6 +44,9 @@ public class TeacherController {
     SettingServiceImpl settingService;
     @Autowired
     StudentServiceImpl studentService;
+
+    @Autowired
+    MessageServiceImpl messageService;
 
     @ResponseBody
     @RequestMapping("/teacherLogin")
@@ -100,6 +106,7 @@ public class TeacherController {
         exam.setRunning(true);
         examService.updateExam(exam);
     }
+
     @ResponseBody
     @RequestMapping("/closeExam")
     public void closeExam(int examId) {
@@ -116,6 +123,82 @@ public class TeacherController {
         return "teacher/teacherAddStudentsPage";
     }
 
+    @RequestMapping("/teacherExamStudentInfoPage")
+    public String teacherExamStudentInfoPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
+        return "teacher/teacherExamStudentInfoPage";
+    }
+
+    @RequestMapping("/teacherExamSummaryPage")
+    public String examSummaryPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
+        int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
+        int uploadCount = studentAnswerService.getStudentAnswerCountByExamId(exam.getId());
+        model.addAttribute("exam", exam);
+        model.addAttribute("type", "middle");
+        model.addAttribute("allStudentCount", allStudentCount);
+        model.addAttribute("loginCount", loginCount);
+        model.addAttribute("uploadCount", uploadCount);
+        return "teacher/teacherExamSummaryPage";
+    }
+
+    @RequestMapping("/teacherUnlockStudentPage")
+    public String teacherUnlockStudentPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
+        return "teacher/teacherExamUnlockStudentPage";
+    }
+
+    @RequestMapping("/teacherNotifyPage")
+    public String teacherNotifyPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("pageSize", settingService.getSetting().getPageCount());
+        return "teacher/teacherExamNotifyPage";
+    }
+
+
+    @ResponseBody
+    @RequestMapping("/insertMessage")
+    public void insertMessage(int examId, String content) {
+        messageService.insertMessage(
+                new Message(
+                        examId,
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),
+                        content)
+        );
+    }
+
+    @ResponseBody
+    @RequestMapping("/deleteMessage")
+    public void deleteMessage(int id) {
+        messageService.deleteMessageById(id);
+    }
+
+    @ResponseBody
+    @RequestMapping("/messageList")
+    public Map<String, Object> messageList(int examId, @RequestParam("page") int page, @RequestParam("limit") int limit) {
+        List<Message> messages = messageService.getMessageListLimitBy(examId, page, limit);
+        int messageCount = messageService.getMessageCount(examId);
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", messageCount);
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", messages);
+        //返回给前端
+        return tableData;
+    }
+
     @ResponseBody
     @RequestMapping("/updateExam")
     public void updateExam(Exam exam) {
@@ -123,6 +206,7 @@ public class TeacherController {
         Exam newExam = examService.getExamById(exam.getId());
         newExam.setName(exam.getName());
         newExam.setStartTime(exam.getStartTime());
+        newExam.setAutoStart(exam.getAutoStart());
         examService.updateExam(newExam);
     }
 
@@ -153,9 +237,72 @@ public class TeacherController {
     }
 
     @ResponseBody
+    @RequestMapping("/queryStudentList")
+    public Map<String, Object> queryStudentList(int examId, Student student, @RequestParam("page") int page, @RequestParam("limit") int limit) {
+        System.out.println(examId);
+        System.out.println(page);
+        System.out.println(student);
+        List<Student> students = studentExamService.getStudentExamByQuery(examId, student, page, limit);
+        int studentExamCount = studentExamService.getStudentExamCountByQuery(examId, student);
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", studentExamCount);
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
+    }
+
+    @ResponseBody
+    @RequestMapping("/queryStudentListByIP")
+    public Map<String, Object> queryStudentListByIP(int examId, String ip, @RequestParam("page") int page, @RequestParam("limit") int limit) {
+        List<Student> students = studentExamService.getStudentExamByIp(examId, ip, page, limit);
+        int studentExamCount = studentExamService.getStudentExamCountByIp(examId, ip);
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", studentExamCount);
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
+    }
+
+    @ResponseBody
+    @RequestMapping("/teacherExamList")
+    public Map<String, Object> teacherExamList(@RequestParam("page") int page, @RequestParam("limit") int limit, HttpSession session) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        List<Exam> examList = examService.getTeacherExamLimitBy(teacher.getId(), page, limit);
+        int examCount = examService.getTeacherExamCount(teacher.getId());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", examCount);
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", examList);
+        //返回给前端
+        return tableData;
+    }
+
+    @ResponseBody
     @RequestMapping("/deleteStudent")
     public void deleteStudent(int examId, String id) {
         studentExamService.deleteByExamIdAndStudentId(examId, id);
+    }
+
+    @ResponseBody
+    @RequestMapping("/resetIp")
+    public void resetIp(String id) {
+        Student student = studentService.getStudentById(id);
+        student.setIp("");
+        studentService.updateStudent(student);
     }
 
     @ResponseBody
