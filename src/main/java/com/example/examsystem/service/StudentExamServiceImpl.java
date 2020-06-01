@@ -14,8 +14,8 @@ public class StudentExamServiceImpl implements StudentExamService {
     StudentExamMapper studentExamMapper;
 
     @Override
-    public StudentExam getStudentExamById(String id) {
-        return studentExamMapper.getStudentExamById(id);
+    public StudentExam getStudentExamById(String id, int examId) {
+        return studentExamMapper.getStudentExamById(id,examId);
     }
 
     @Override

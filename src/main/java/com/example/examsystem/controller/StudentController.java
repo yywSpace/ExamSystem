@@ -167,7 +167,7 @@ public class StudentController {
                 return "no_exam";
             else
                 model.addAttribute("exam", exam);
-            StudentExam studentExam = studentExamService.getStudentExamById(id);
+            StudentExam studentExam = studentExamService.getStudentExamById(id,exam.getId());
 
             if (studentExam == null) {
                 return "not_in_this_exam";

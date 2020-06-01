@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StudentExamService {
 
-    StudentExam getStudentExamById(String id);
+    StudentExam getStudentExamById(String id, int examId);
 
     void insertStudentExam(StudentExam studentExam);
 

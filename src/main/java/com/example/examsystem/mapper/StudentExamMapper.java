@@ -51,8 +51,8 @@ public interface StudentExamMapper {
             "       order by i desc limit #{start},#{pageSize}")
     List<Student> getStudentExamByIp(int examId, String ip, int start, int pageSize);
 
-    @Select("select * from studentExam where studentId = #{studentId}")
-    StudentExam getStudentExamById(String studentId);
+    @Select("select * from studentExam where studentId = #{studentId} and examId = #{examId}")
+    StudentExam getStudentExamById(String studentId,int examId);
 
     @Delete("delete from studentExam where examId = #{examId} and studentId = #{studentId}")
     void deleteByExamIdAndStudentId(int examId, String studentId);

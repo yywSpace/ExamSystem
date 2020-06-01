@@ -34,8 +34,8 @@
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <div th:replace="/manager/background::header"></div>
-    <div th:replace="/manager/background::left_side_bar"></div>
+    <div th:replace="manager/background::header"></div>
+    <div th:replace="manager/background::left_side_bar"></div>
 
     <div class="layui-body" style="padding-right: 20px; padding-left: 20px">
         <table   class="layui-hide" id="test" lay-filter="test"></table>
@@ -58,7 +58,7 @@
         </script>
     </div>
 
-    <div th:replace="/manager/background::footer"></div>
+    <div th:replace="manager/background::footer"></div>
 </div>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="/layui/layui.all.js"></script>
