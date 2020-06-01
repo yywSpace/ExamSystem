@@ -28,15 +28,30 @@
             上机考试系统考试概况</h1>
     </div>
 
-    <div style="padding:10px;background-color:#555;color:#FFF;border-radius: 10px">
+    <div style="padding:20px;background-color:#555;color:#FFF;border-radius: 10px">
         <div th:if="exam == null">
             <h3>当前没有考试正在进行</h3>
         </div>
         <div th:if="exam ne null">
             <h3>[[${exam.name}]]考试进行情况：</h3>
-            <p>参加考试学生总数： [[${allStudentCount}]]</p>
-            <p>已登陆学生数量：[[${loginCount}]]，未登录学生数量：[[${allStudentCount-loginCount}]]</p>
-            <p>已登陆学生中，提交文件学生数量：[[${uploadCount}]]，未提交文件学生数量：[[${allStudentCount-uploadCount}]]</p>
+            <p style="margin-top: 5px;">参加考试学生总数： [[${allStudentCount}]]</p>
+            <p style="margin-top: 5px;">
+                已登陆学生数量：<a style="color: white" th:href="@{teacherLoginStudentListPage}">
+                <i class="layui-icon layui-icon-search"></i>
+                [[${loginCount}]]</a>
+                ，未登录学生数量：<a style="color: white" th:href="@{teacherNotLoginStudentListPage}">
+                <i class="layui-icon layui-icon-search"></i>
+                [[${allStudentCount-loginCount}]]</a>
+            </p>
+            <p style="margin-top: 5px;">
+                已登陆学生中，提交文件学生数量：<a style="color: white" th:href="@{teacherUploadStudentListPage}">
+                <i class="layui-icon layui-icon-search"></i>
+                [[${uploadCount}]]</a>
+                ，未提交文件学生数量：<a style="color: white" th:href="@{teacherNotUploadStudentListPage}">
+                <i class="layui-icon layui-icon-search"></i>
+                [[${allStudentCount-uploadCount}]]</a>
+            </p>
+            <p style="margin-top: 5px;"></p>
         </div>
     </div>
 </div>

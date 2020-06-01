@@ -57,15 +57,15 @@
                 layer.open({
                     type: 1,
                     title: "修改密码",
-                    area: ['35%', '34%'],
+                    area: ['25%', '34%'],
                     btn: ['确定', '取消'],
-                    content: '<form class="layui-form" id="admin_form" method="post" style="margin-top:20px;margin-right: 40px" lay-filter="example">\n' +
+                    content: '<form class="layui-form"  id="teacher_form" method="post" style="margin-top:30px;margin-right: 40px" lay-filter="example">\n' +
                         '        <input id="id" type="hidden" name="id"">\n' +
                         '        <div class="layui-form-item">\n' +
                         '            <label class="layui-form-label">密码</label>\n' +
                         '            <div class="layui-input-block">\n' +
                         '                <input id="password" type="password" name="password" lay-verify="password" autocomplete="off"\n' +
-                        '                       placeholder="请输入密码"\n' +
+                        '                       placeholder="请输入密码" style="width:200px" ' +
                         '                       class="layui-input form-item">\n' +
                         '            </div>\n' +
                         '        </div>\n' +
@@ -73,7 +73,7 @@
                         '            <label class="layui-form-label">确认密码</label>\n' +
                         '            <div class="layui-input-block">\n' +
                         '                <input id="repeat_password" type="password" name="repeat_password" lay-verify="repeat_password"\n' +
-                        '                       autocomplete="off"\n' +
+                        '                       autocomplete="off"  style="width:200px" ' +
                         '                       placeholder="请输入密码"\n' +
                         '                       class="layui-input form-item">\n' +
                         '            </div>\n' +
@@ -82,6 +82,24 @@
                     success: function (layero, index) {
                         $('#id').val([[${session.teacher.id}]]);
                     }, yes: function (index, layero) {
+                        if ($("#password").val() !== $("#repeat_password").val()) {
+                            layer.msg("两次密码不相同")
+                        } else {
+                            $.ajax({
+                                url: "/changePassword",
+                                async: false,
+                                type: "POST",
+                                dataType: "text",
+                                data: {
+                                    password:$("#password").val()
+                                },
+                                success() {
+                                    $("#teacher_form").submit();
+                                    layer.msg("添加成功");
+                                    layer.close()
+                                }
+                            });
+                        }
 
                     }
                 });

@@ -1,5 +1,6 @@
 package com.example.examsystem.service;
 
+import com.example.examsystem.entity.Student;
 import com.example.examsystem.entity.StudentAnswer;
 import com.example.examsystem.mapper.ExamMapper;
 import com.example.examsystem.mapper.StudentAnswerMapper;
@@ -33,6 +34,15 @@ public class StudentAnswerServiceImpl implements StudentAnswerService {
     @Override
     public int getStudentAnswerCountByExamId(int examId) {
         return studentAnswerMapper.getStudentAnswerCountByExamId(examId);
+    }
+
+    @Override
+    public List<Student> getUploadStudents(int examId) {
+        return studentAnswerMapper.getUploadStudents(examId);
+    }
+    @Override
+    public List<Student> getUnUploadStudents(int examId) {
+        return studentAnswerMapper.getUnUploadStudents(examId);
     }
 
     @Override

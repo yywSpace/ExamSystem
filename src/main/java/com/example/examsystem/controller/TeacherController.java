@@ -4,6 +4,7 @@ import com.example.examsystem.entity.*;
 import com.example.examsystem.service.*;
 import com.example.examsystem.utils.ExcelUtil;
 import com.example.examsystem.utils.FileUtil;
+import com.example.examsystem.utils.PasswordUtil;
 import com.example.examsystem.utils.ZipUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,6 +65,14 @@ public class TeacherController {
     public String logout(HttpSession session) {
         session.setAttribute("teacher", null);
         return "redirect:/login";
+    }
+
+    @RequestMapping("/changePassword")
+    public String changePassword(String password, HttpSession session) {
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        teacher.setPassword(PasswordUtil.getMD5(password));
+        teacherService.updateTeacher(teacher);
+        return "redirect:/teacherMainPage";
     }
 
     @ResponseBody
@@ -144,6 +153,118 @@ public class TeacherController {
         model.addAttribute("loginCount", loginCount);
         model.addAttribute("uploadCount", uploadCount);
         return "teacher/teacherExamSummaryPage";
+    }
+
+    @RequestMapping("/teacherLoginStudentListPage")
+    public String loginStudentListPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("loginCount", loginCount);
+        return "teacher/teacherExamStudentLoginListPage";
+    }
+
+    @RequestMapping("/teacherNotLoginStudentListPage")
+    public String teacherNotLoginStudentListPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
+        int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("allStudentCount", allStudentCount);
+        model.addAttribute("loginCount", loginCount);
+        return "teacher/teacherExamStudentLoginNotListPage";
+    }
+
+    @RequestMapping("/teacherUploadStudentListPage")
+    public String uploadStudentListPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        List<Student> students  =studentAnswerService.getUploadStudents(exam.getId());
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("uploadCount", students.size());
+        return "teacher/teacherExamStudentUploadListPage";
+    }
+
+    @RequestMapping("/teacherNotUploadStudentListPage")
+    public String teacherNotUploadStudentListPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
+        List<Student> students  =studentAnswerService.getUploadStudents(exam.getId());
+        model.addAttribute("examId", exam.getId());
+        model.addAttribute("type", "middle");
+        model.addAttribute("allStudentCount", allStudentCount);
+        model.addAttribute("uploadCount", students.size());
+        return "teacher/teacherExamStudentUploadNotListPage";
+    }
+    @ResponseBody
+    @RequestMapping("/uploadStudentList")
+    public Map<String, Object> uploadStudentList() {
+        Exam exam = examService.getRunningExam();
+        List<Student> students  =studentAnswerService.getUploadStudents(exam.getId());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", students.size());
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
+    }
+
+    @ResponseBody
+    @RequestMapping("/unUploadStudentList")
+    public Map<String, Object> unUploadStudentList() {
+        Exam exam = examService.getRunningExam();
+        List<Student> students  =studentAnswerService.getUnUploadStudents(exam.getId());
+        System.out.println(students.get(0).getName());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", students.size());
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
+    }
+    @ResponseBody
+    @RequestMapping("/loginStudentList")
+    public Map<String, Object> loginStudentList() {
+        Exam exam = examService.getRunningExam();
+        List<Student> students = studentExamService.getLoginStudentList(exam.getId());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", students.size());
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
+    }
+
+    @ResponseBody
+    @RequestMapping("/unLoginStudentList")
+    public Map<String, Object> unLoginStudentList() {
+        Exam exam = examService.getRunningExam();
+        List<Student> students = studentExamService.getNotLoginStudentList(exam.getId());
+        System.out.println(students.get(0).getName());
+        Map<String, Object> tableData = new HashMap<>();
+        //这是layui要求返回的json数据格式
+        tableData.put("code", 0);
+        tableData.put("msg", "");
+        //将全部数据的条数作为count传给前台（一共多少条）
+        tableData.put("count", students.size());
+        //将分页后的数据返回（每页要显示的数据）
+        tableData.put("data", students);
+        //返回给前端
+        return tableData;
     }
 
     @RequestMapping("/teacherUnlockStudentPage")

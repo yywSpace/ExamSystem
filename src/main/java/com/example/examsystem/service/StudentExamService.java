@@ -31,4 +31,9 @@ public interface StudentExamService {
     List<Student> getStudentExamByIp(int examId, String ip, int page, int pageSize);
 
     int getStudentExamCountByIp(int examId, String ip);
+
+
+    List<Student> getLoginStudentList(int examId);
+
+    List<Student> getNotLoginStudentList(int examId);
 }

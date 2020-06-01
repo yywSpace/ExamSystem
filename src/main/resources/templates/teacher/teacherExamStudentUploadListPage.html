@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>考试概况</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style type="text/css">
+        html, body {
+            background-color: white;
+            height: auto;
+        }
+
+        .content {
+            height: 100%;
+            width: 70%;
+            margin: auto;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="teacher/framework::header"></div>
+
+<div class="content" style="display: flex; flex-flow: column;">
+    <div style="height: 100px;display: flex; align-items: center">
+        <h1>
+            <img alt="图标" src="images/teacher/考试.png" height="50px">
+            上机考试系统考试概况</h1>
+    </div>
+
+    <div style="padding:20px;background-color:#555;color:#FFF;border-radius: 10px">
+        <p>提交文件学生数量：[[${uploadCount}]]</p>
+    </div>
+    <table class="layui-hide" id="studentTable" lay-filter="studentTable"></table>
+
+</div>
+
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+    layui.use(['table'], function () {
+        var table = layui.table;
+        table.render({
+            elem: '#studentTable'
+            , url: '/uploadStudentList'
+            , limit: [[${uploadCount}]]
+            , title: '提交信息表'
+            , cols: [
+                [
+                    {field: 'id', title: '学号', align: "center"}
+                    , {field: 'name', title: '姓名', align: "center"}
+                    , {field: 'sClass', title: '班级', align: "center"}
+                ]
+            ]
+        });
+    });
+</script>
+</body>
+</html>

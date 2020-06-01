@@ -49,6 +49,15 @@ public class StudentExamServiceImpl implements StudentExamService {
     }
 
     @Override
+    public List<Student> getLoginStudentList(int examId) {
+        return studentExamMapper.getLoginStudentList(examId);
+     }
+
+    @Override
+    public List<Student> getNotLoginStudentList(int examId) {
+        return studentExamMapper.getNotLoginStudentList(examId);
+    }
+    @Override
     public List<Student> getStudentExamListLimitBy(int examId, int page, int pageSize) {
         int start = (page - 1) * pageSize;
         return studentExamMapper.getStudentExamListLimitBy(examId, start, pageSize);

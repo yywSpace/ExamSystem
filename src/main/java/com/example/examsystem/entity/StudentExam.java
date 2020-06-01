@@ -4,7 +4,7 @@ public class StudentExam {
     private int id;
     private String studentId;
     private int examId;
-    private Boolean login;
+    private Boolean login = false;
 
     public StudentExam(String studentId, int examId) {
         this.studentId = studentId;

@@ -1,5 +1,6 @@
 package com.example.examsystem.service;
 
+import com.example.examsystem.entity.Student;
 import com.example.examsystem.entity.StudentAnswer;
 
 import java.util.List;
@@ -24,4 +25,8 @@ public interface StudentAnswerService {
     StudentAnswer getStudentAnswerById(int id);
 
     StudentAnswer getStudentAnswerByFileName(String studentId, String fileName);
+
+    List<Student> getUploadStudents(int examId);
+
+    List<Student> getUnUploadStudents(int examId);
 }

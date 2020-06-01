@@ -1,5 +1,6 @@
 package com.example.examsystem.mapper;
 
+import com.example.examsystem.entity.Student;
 import com.example.examsystem.entity.StudentAnswer;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -42,4 +43,14 @@ public interface StudentAnswerMapper {
 
     @Select("select * from studentAnswer where studentId = #{studentId}  and examId = #{examId}")
     List<StudentAnswer> getStudentAnswers(String studentId, int examId);
+
+    @Select("select distinct student.id,name,sClass,ip from studentAnswer,student " +
+            "where examId = #{examId} and student.id = studentAnswer.studentId;")
+    List<Student> getUploadStudents(int examId);
+
+    @Select("SELECT * FROM student, studentExam " +
+            "where examId = #{examId} and student.id = studentExam.studentId and " +
+            "student.id not in (select studentId from studentAnswer);")
+    List<Student> getUnUploadStudents(int examId);
+
 }

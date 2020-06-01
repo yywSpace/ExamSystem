@@ -60,4 +60,16 @@ public interface StudentExamMapper {
     @Update("update studentExam set examId = #{examId}, studentId = #{studentId},login = #{login} where id = #{id}")
     void updateStudentExam(StudentExam studentExam);
 
+    @Select("select (@i:=@i+1) as i,student.id,name,sClass,ip,login  from studentExam,student,(select @i:=0) as it " +
+            "   where examId = #{examId} and student.id = studentExam.studentId " +
+            "       and login = 1" +
+            "       order by i desc")
+    List<Student> getLoginStudentList(int examId);
+
+    @Select("select (@i:=@i+1) as i,student.id,name,sClass,ip,login  from studentExam,student,(select @i:=0) as it " +
+            "   where examId = #{examId} and student.id = studentExam.studentId " +
+            "       and login = 0" +
+            "       order by i desc")
+    List<Student> getNotLoginStudentList(int examId);
+
 }
