@@ -24,6 +24,8 @@ import java.util.Map;
 public class AdminController {
     @Autowired
     TeacherServiceImpl teacherService;
+    @Autowired
+    MessageServiceImpl messageService;
 
     @Autowired
     SettingServiceImpl settingService;
@@ -115,6 +117,8 @@ public class AdminController {
         studentExamService.deleteStudentExamByExamId(exam.getId());
         // ip置空
         studentService.clearIp();
+        // msg
+        messageService.deleteMessageByExamId(exam.getId());
     }
 
 

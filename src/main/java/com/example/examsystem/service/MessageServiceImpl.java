@@ -28,6 +28,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public void deleteMessageByExamId(int examId) {
+        messageMapper.deleteMessageByExamId(examId);
+    }
+
+    @Override
     public int getMessageCount(int examId) {
         return messageMapper.getMessageCount(examId);
     }

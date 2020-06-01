@@ -128,6 +128,7 @@ public class TeacherController {
     @RequestMapping("/teacherAddStudentsPage")
     public String addStudentsPage(int examId, Model model) {
         model.addAttribute("examId", examId);
+        model.addAttribute("type", "before");
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
         return "teacher/teacherAddStudentsPage";
     }

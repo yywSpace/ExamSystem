@@ -7,7 +7,7 @@
     <style type="text/css">
         html, body {
             background-color: white;
-            height: 95%;
+            height: auto;
         }
 
         .content {
@@ -17,7 +17,7 @@
         }
 
         .content-block {
-            margin-top: 10px;
+            margin-bottom: 10px;
             background-color: #f2f2f2;
             height: auto;
             padding: 10px 0 10px 20px;
@@ -38,10 +38,16 @@
 <div th:replace="teacher/framework::header"></div>
 
 <div class="content" style="display: flex; flex-flow: column;">
-    <div style="height: 100px;margin-top: 10px;display: flex; align-items: center">
+    <div style="height: 100px;display: flex; align-items: center">
         <h1>
             <img alt="图标" src="images/teacher/导入.svg" height="50px">
             导入学生信息</h1>
+    </div>
+    <div class="content-block">
+        <span>完成学生名单的导入和修改后 </span>
+         <button type="button" class="layui-btn layui-btn-warm" onclick="window.location.replace(document.referrer);">
+            返回编辑
+        </button>
     </div>
     <div class="content-block">
         <h2>添加单个学生</h2>
@@ -50,9 +56,11 @@
                 <!--                <input type="hidden" name="examId" th:value="${examId}">-->
                 <input type="text" name="id" id="id" autocomplete="off" placeholder="学号" lay-verify="required"
                        class="layui-input" style="width: 200px;margin-right: 5px;">
-                <input type="text" name="name" class="layui-input" id="name" autocomplete="off" lay-verify="required" placeholder="姓名"
+                <input type="text" name="name" class="layui-input" id="name" autocomplete="off" lay-verify="required"
+                       placeholder="姓名"
                        style="width: 200px;margin-right: 5px;">
-                <input type="text" name="sClass" class="layui-input" id="sClass" autocomplete="off" lay-verify="required" placeholder="班级"
+                <input type="text" name="sClass" class="layui-input" id="sClass" autocomplete="off"
+                       lay-verify="required" placeholder="班级"
                        style="width: 200px;margin-right: 5px;">
                 <button type="submit" class="layui-btn" lay-submit=""
                         lay-filter="submit_button">

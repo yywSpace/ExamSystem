@@ -7,7 +7,7 @@
     <style type="text/css">
         html, body {
             background-color: white;
-            height: 95%;
+            height: auto;
         }
 
         .content {
@@ -31,12 +31,15 @@
     <div>
         <table style="background-color: white" class="layui-hide" id="examTable" lay-filter="examTable"></table>
         <script type="text/html" id="operationCell">
-            {{#  if(!d.running){ }}
+            {{#  if(!d.running && !d.finished){ }}
+
+            {{#  } else if(!d.running) { }}
             <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="archive">归档</a>
             <a class="layui-btn layui-btn-xs" lay-event="clear">清理</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             {{#  } else { }}
             <a class="layui-btn layui-btn-danger layui-btn-xs" style="background-color: green" lay-event="close">结束考试</a>
+
             {{#  } }}
 
         </script>
@@ -68,7 +71,7 @@
             , cols: [
                 [
                     {field: 'name', title: '考试名称', align: "center"}
-                    , {field: 'startTime', title: '考试时间', align: "center", width: 200}
+                    , {field: 'startTime', title: '考试时间', align: "center"}
                     , {
                     field: 'autoStart',
                     title: '自动开始',

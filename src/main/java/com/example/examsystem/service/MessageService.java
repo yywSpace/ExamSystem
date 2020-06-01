@@ -11,6 +11,7 @@ public interface MessageService {
     void updateMessage(Message message);
 
     void deleteMessageById(int id);
+    void deleteMessageByExamId(int examId);
 
     int getMessageCount(int examId);
 

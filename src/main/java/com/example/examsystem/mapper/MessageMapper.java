@@ -19,6 +19,9 @@ public interface MessageMapper {
     @Delete("delete from message where id = #{id}")
     void deleteMessageById(int id);
 
+    @Delete("delete from message where examId = #{examId}")
+    void deleteMessageByExamId(int examId);
+
     @Select("select * from message where examId = #{examId} order by id desc limit #{start},#{pageSize}")
     List<Message> getMessageListLimitBy(int examId, int start, int pageSize);
 

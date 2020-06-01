@@ -22,7 +22,7 @@
         </li>
         <li class="layui-nav-item"
             th:class="${type == 'middle'? 'layui-nav-item layui-this': 'layui-nav-item'}">
-            <a href="">考中操作</a>
+            <a href="" th:href="@{/teacherExamSummaryPage}">考中操作</a>
             <dl class="layui-nav-child">
                 <dd><a href="" th:href="@{/teacherExamSummaryPage}">考试概况</a></dd>
                 <dd><a href="" th:href="@{/teacherExamStudentInfoPage}">学生信息</a></dd>
