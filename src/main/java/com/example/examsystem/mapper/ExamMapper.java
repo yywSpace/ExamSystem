@@ -22,13 +22,13 @@ public interface ExamMapper {
     void updateExam(Exam exam);
 
     @Delete("delete from exam where id = #{id}")
-    void deleteExamById(int id);
+    void deleteExamById(@Param("id") int id);
 
     @Select("select * from exam order by id desc limit #{start},#{pageSize}")
-    List<Exam> getExamLimitBy(int start, int pageSize);
+    List<Exam> getExamLimitBy(@Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select * from exam where teacherId =  #{teacherId} order by id desc limit #{start},#{pageSize}")
-    List<Exam> getTeacherExamLimitBy(int teacherId, int start, int pageSize);
+    List<Exam> getTeacherExamLimitBy(@Param("teacherId") int teacherId, @Param("start")int start, @Param("pageSize")int pageSize);
 
     @Select("select * from exam where id = ${id}")
     Exam getExamById(int id);
@@ -40,7 +40,7 @@ public interface ExamMapper {
     int getExamCount();
 
     @Select("select count(*) from exam  where teacherId =  #{teacherId}")
-    int getTeacherExamCount(int teacherId);
+    int getTeacherExamCount(@Param("teacherId") int teacherId);
 
     @Select("select * from exam where running = 0 and finished = 0 and autoStart = 1")
     List<Exam> getAutoStartExamListNotStart();

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.apache.ibatis.annotations.Param;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -120,7 +120,8 @@ public class StudentController {
 
     @RequestMapping(value = "/studentUploadAnswerFile", method = RequestMethod.POST)
     @ResponseBody
-    public String uploadSource(@RequestParam("file") MultipartFile file, HttpSession session) {
+    public Map<String ,Object> uploadSource(@RequestParam("file") MultipartFile file, HttpSession session) {
+        Map<String ,Object> map = new HashMap<>();
         Exam exam = examService.getRunningExam();
         Student student = (Student) session.getAttribute("student");
         System.out.println(student.getsClass());
@@ -151,9 +152,15 @@ public class StudentController {
                 studentAnswerService.insertStudentAnswer(studentAnswer);
             else
                 studentAnswerService.updateStudentAnswer(studentAnswer);
-            return "{\"code\":0,\"msg\":\"" + files.getAbsolutePath() + "\"}";
-        } else
-            return "{\"code\":-1,\"msg\":\"}";
+            map.put("code",0);
+            map.put("msg",files.getAbsolutePath());
+            return map;
+        } else {
+            map.put("code",-1);
+            map.put("msg","");
+            return map;
+        }
+
     }
 
     @ResponseBody

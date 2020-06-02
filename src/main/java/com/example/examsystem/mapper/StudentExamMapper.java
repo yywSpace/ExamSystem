@@ -23,7 +23,7 @@ public interface StudentExamMapper {
     @Select("select count(*) from studentExam,student " +
             "where examId = #{examId} and student.id = studentExam.studentId  " +
             "and student.id like '%${student.id}%' and name like '%${student.name}%' and sClass like '%${student.sClass}%' ")
-    int getStudentExamCountByQuery(int examId, Student student);
+    int getStudentExamCountByQuery(@Param("examId") int examId, @Param("student")Student student);
 
     @Select("select count(*) from studentExam where examId = #{examId} and login = 1")
     int getStudentExamLoginCount(int examId);
@@ -32,27 +32,27 @@ public interface StudentExamMapper {
     @Select("select (@i:=@i+1) as i,student.id,name,sClass,ip  from studentExam,student,(select @i:=0) as it " +
             "where examId = #{examId} and student.id = studentExam.studentId " +
             "order by i desc limit #{start},#{pageSize}")
-    List<Student> getStudentExamListLimitBy(int examId, int start, int pageSize);
+    List<Student> getStudentExamListLimitBy(@Param("examId") int examId,@Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select (@i:=@i+1) as i,student.id,name,sClass,ip  from studentExam,student,(select @i:=0) as it " +
             "   where examId = #{examId} and student.id = studentExam.studentId " +
             "       and student.id like '%${student.id}%' and name like '%${student.name}%' and sClass like '%${student.sClass}%' " +
             "       order by i desc limit #{start},#{pageSize}")
-    List<Student> getStudentExamByQuery(int examId, Student student, int start, int pageSize);
+    List<Student> getStudentExamByQuery(@Param("examId") int examId, @Param("student")Student student, @Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select count(*) from studentExam,student " +
             "where examId = #{examId} and student.id = studentExam.studentId  " +
             "and student.ip like '%${ip}%'")
-    int getStudentExamCountByIp(int examId, String ip);
+    int getStudentExamCountByIp(@Param("examId") int examId, String ip);
 
     @Select("select (@i:=@i+1) as i,student.id,name,sClass,ip  from studentExam,student,(select @i:=0) as it " +
             "   where examId = #{examId} and student.id = studentExam.studentId " +
             "       and student.ip like '%${ip}%'" +
             "       order by i desc limit #{start},#{pageSize}")
-    List<Student> getStudentExamByIp(int examId, String ip, int start, int pageSize);
+    List<Student> getStudentExamByIp(@Param("examId") int examId, String ip, @Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select * from studentExam where studentId = #{studentId} and examId = #{examId}")
-    StudentExam getStudentExamById(String studentId,int examId);
+    StudentExam getStudentExamById(@Param("studentId") String studentId,@Param("examId") int examId);
 
     @Delete("delete from studentExam where examId = #{examId} and studentId = #{studentId}")
     void deleteByExamIdAndStudentId(int examId, String studentId);

@@ -23,7 +23,7 @@ public interface MessageMapper {
     void deleteMessageByExamId(int examId);
 
     @Select("select * from message where examId = #{examId} order by id desc limit #{start},#{pageSize}")
-    List<Message> getMessageListLimitBy(int examId, int start, int pageSize);
+    List<Message> getMessageListLimitBy(@Param("examId") int examId,@Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select count(*) from message  where examId = #{examId}")
     int getMessageCount(int examId);

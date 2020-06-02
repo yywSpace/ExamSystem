@@ -27,7 +27,7 @@ public interface TeacherMapper {
     List<Teacher> getTeacherList();
 
     @Select("select * from teacher order by id desc limit #{start},#{pageSize}")
-    List<Teacher> getTeacherLimitBy(int start, int pageSize);
+    List<Teacher> getTeacherLimitBy(@Param("start") int start, @Param("pageSize") int pageSize);
 
     @Select("select * from teacher where name = #{name}")
     Teacher getTeacherByName(String name);

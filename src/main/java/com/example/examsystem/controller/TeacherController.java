@@ -221,7 +221,6 @@ public class TeacherController {
     public Map<String, Object> unUploadStudentList() {
         Exam exam = examService.getRunningExam();
         List<Student> students  =studentAnswerService.getUnUploadStudents(exam.getId());
-        System.out.println(students.get(0).getName());
         Map<String, Object> tableData = new HashMap<>();
         //这是layui要求返回的json数据格式
         tableData.put("code", 0);
@@ -255,7 +254,6 @@ public class TeacherController {
     public Map<String, Object> unLoginStudentList() {
         Exam exam = examService.getRunningExam();
         List<Student> students = studentExamService.getNotLoginStudentList(exam.getId());
-        System.out.println(students.get(0).getName());
         Map<String, Object> tableData = new HashMap<>();
         //这是layui要求返回的json数据格式
         tableData.put("code", 0);
@@ -488,8 +486,9 @@ public class TeacherController {
 
     @RequestMapping(value = "/uploadExamPaper", method = RequestMethod.POST)
     @ResponseBody
-    public String uploadSource(@RequestParam("file") MultipartFile file, int id) {
+    public Map<String,Object> uploadSource(@RequestParam("file") MultipartFile file, int id) {
         Exam exam = examService.getExamById(id);
+        Map<String,Object> map = new HashMap<>();
         String pathString = Setting.uploadPath + exam.getName();
         Path filePath = Paths.get(pathString);
         try {
@@ -506,10 +505,16 @@ public class TeacherController {
             exam.setPaperName(file.getOriginalFilename());
             exam.setUploadExamPaper(true);
             examService.updateExam(exam);
-            return "{\"code\":0,\"msg\":\"" + files.getAbsolutePath() + "\"}";
+            System.out.println(files.getAbsolutePath());
+            map.put("code",0);
+            map.put("msg",files.getAbsolutePath());
+            return map;
 
         } catch (Exception e) {
-            return "{\"code\":-1,\"msg\":\"}";
+            System.out.println(e.getMessage());
+            map.put("code",-1);
+            map.put("msg","");
+            return  map;
         }
     }
 

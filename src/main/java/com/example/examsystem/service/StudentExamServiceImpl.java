@@ -5,7 +5,7 @@ import com.example.examsystem.entity.StudentExam;
 import com.example.examsystem.mapper.StudentExamMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Service
@@ -14,7 +14,7 @@ public class StudentExamServiceImpl implements StudentExamService {
     StudentExamMapper studentExamMapper;
 
     @Override
-    public StudentExam getStudentExamById(String id, int examId) {
+    public StudentExam getStudentExamById(@Param("id") String id,@Param("examId") int examId) {
         return studentExamMapper.getStudentExamById(id,examId);
     }
 

@@ -27,7 +27,7 @@ public interface StudentAnswerMapper {
     void deleteStudentAnswerById(int id);
 
     @Select("select count(*) from studentAnswer where studentId = #{studentId}  and examId = #{examId}")
-    int getStudentAnswerCount(String studentId, int examId);
+    int getStudentAnswerCount(@Param("studentId") String studentId,@Param("examId") int examId);
 
     @Select("select count(distinct studentId) from studentAnswer where examId = #{examId}")
     int getStudentAnswerCountByExamId(int examId);
@@ -36,13 +36,13 @@ public interface StudentAnswerMapper {
     StudentAnswer getStudentAnswerById(int id);
 
     @Select("select * from studentAnswer where studentId = #{studentId} and answerFileName=#{fileName}")
-    StudentAnswer getStudentAnswerByFileName(String studentId, String fileName);
+    StudentAnswer getStudentAnswerByFileName(@Param("studentId") String studentId,@Param("fileName") String fileName);
 
     @Select("select * from studentAnswer where studentId = #{studentId}  and examId = #{examId} order by id desc limit #{start},#{pageSize}")
-    List<StudentAnswer> getStudentAnswerLimitBy(String studentId, int examId, int start, int pageSize);
+    List<StudentAnswer> getStudentAnswerLimitBy(@Param("studentId")String studentId, @Param("examId")int examId,@Param("start") int start,@Param("pageSize") int pageSize);
 
     @Select("select * from studentAnswer where studentId = #{studentId}  and examId = #{examId}")
-    List<StudentAnswer> getStudentAnswers(String studentId, int examId);
+    List<StudentAnswer> getStudentAnswers(@Param("studentId") String studentId,@Param("examId") int examId);
 
     @Select("select distinct student.id,name,sClass,ip from studentAnswer,student " +
             "where examId = #{examId} and student.id = studentAnswer.studentId;")
