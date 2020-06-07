@@ -1,7 +1,7 @@
 package com.example.examsystem.entity;
 
 public class Setting {
-    public static String uploadPath = "E:\\upload\\";
+    public static String uploadPath = "/home/zhy/IdeaProjects/upload/";
 
     private int id;
     /**

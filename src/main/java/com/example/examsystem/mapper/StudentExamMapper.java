@@ -55,7 +55,7 @@ public interface StudentExamMapper {
     StudentExam getStudentExamById(@Param("studentId") String studentId,@Param("examId") int examId);
 
     @Delete("delete from studentExam where examId = #{examId} and studentId = #{studentId}")
-    void deleteByExamIdAndStudentId(int examId, String studentId);
+    void deleteByExamIdAndStudentId(@Param("examId")int examId, @Param("studentId")String studentId);
 
     @Update("update studentExam set examId = #{examId}, studentId = #{studentId},login = #{login} where id = #{id}")
     void updateStudentExam(StudentExam studentExam);

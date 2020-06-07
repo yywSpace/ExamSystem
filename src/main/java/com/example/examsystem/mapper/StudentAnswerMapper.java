@@ -50,7 +50,7 @@ public interface StudentAnswerMapper {
 
     @Select("SELECT * FROM student, studentExam " +
             "where examId = #{examId} and student.id = studentExam.studentId and " +
-            "student.id not in (select studentId from studentAnswer);")
+            "student.id not in (select studentId from studentAnswer where examId = #{examId});")
     List<Student> getUnUploadStudents(int examId);
 
 }

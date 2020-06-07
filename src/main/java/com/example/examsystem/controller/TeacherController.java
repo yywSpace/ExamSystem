@@ -104,6 +104,12 @@ public class TeacherController {
 
     @RequestMapping("/teacherMainPage")
     public String mainPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         model.addAttribute("type", "main");
         return "teacher/teacherMainPage";
     }
@@ -127,6 +133,12 @@ public class TeacherController {
 
     @RequestMapping("/teacherAddStudentsPage")
     public String addStudentsPage(int examId, Model model) {
+        Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         model.addAttribute("examId", examId);
         model.addAttribute("type", "before");
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
@@ -136,6 +148,11 @@ public class TeacherController {
     @RequestMapping("/teacherExamStudentInfoPage")
     public String teacherExamStudentInfoPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         model.addAttribute("examId", exam.getId());
         model.addAttribute("type", "middle");
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
@@ -145,6 +162,11 @@ public class TeacherController {
     @RequestMapping("/teacherExamSummaryPage")
     public String examSummaryPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
         int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
         int uploadCount = studentAnswerService.getStudentAnswerCountByExamId(exam.getId());
@@ -159,6 +181,11 @@ public class TeacherController {
     @RequestMapping("/teacherLoginStudentListPage")
     public String loginStudentListPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
         model.addAttribute("examId", exam.getId());
         model.addAttribute("type", "middle");
@@ -169,6 +196,11 @@ public class TeacherController {
     @RequestMapping("/teacherNotLoginStudentListPage")
     public String teacherNotLoginStudentListPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
         int loginCount = studentExamService.getStudentExamLoginCount(exam.getId());
         model.addAttribute("examId", exam.getId());
@@ -181,6 +213,11 @@ public class TeacherController {
     @RequestMapping("/teacherUploadStudentListPage")
     public String uploadStudentListPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         List<Student> students  =studentAnswerService.getUploadStudents(exam.getId());
         model.addAttribute("examId", exam.getId());
         model.addAttribute("type", "middle");
@@ -191,6 +228,11 @@ public class TeacherController {
     @RequestMapping("/teacherNotUploadStudentListPage")
     public String teacherNotUploadStudentListPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int allStudentCount = studentExamService.getStudentExamCount(exam.getId());
         List<Student> students  =studentAnswerService.getUploadStudents(exam.getId());
         model.addAttribute("examId", exam.getId());
@@ -269,6 +311,11 @@ public class TeacherController {
     @RequestMapping("/teacherUnlockStudentPage")
     public String teacherUnlockStudentPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         model.addAttribute("examId", exam.getId());
         model.addAttribute("type", "middle");
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
@@ -278,6 +325,11 @@ public class TeacherController {
     @RequestMapping("/teacherNotifyPage")
     public String teacherNotifyPage(Model model) {
         Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         model.addAttribute("examId", exam.getId());
         model.addAttribute("type", "middle");
         model.addAttribute("pageSize", settingService.getSetting().getPageCount());
@@ -449,6 +501,12 @@ public class TeacherController {
 
     @RequestMapping("/teacherExamBeforePage")
     public String beforePage(Model model) {
+        Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int examCount = examService.getExamCount();
         model.addAttribute("adminCount", examCount);
         model.addAttribute("allow", settingService.getSetting().isAllowClearAndDelete());
@@ -459,6 +517,12 @@ public class TeacherController {
 
     @RequestMapping("/teacherModifyExamInfoPage")
     public String modifyExamInfo(int id, Model model) throws ParseException {
+        Exam runningExam = examService.getRunningExam();
+        if (runningExam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         Exam exam = examService.getExamById(id);
         model.addAttribute("exam", exam);
         model.addAttribute("type", "before");
@@ -476,6 +540,12 @@ public class TeacherController {
 
     @RequestMapping("/teacherExamAfterPage")
     public String afterPage(Model model) {
+        Exam exam = examService.getRunningExam();
+        if (exam == null) {
+            model.addAttribute("examStatus", "no");
+        } else {
+            model.addAttribute("examStatus", "yes");
+        }
         int examCount = examService.getExamCount();
         model.addAttribute("adminCount", examCount);
         model.addAttribute("allow", settingService.getSetting().isAllowClearAndDelete());

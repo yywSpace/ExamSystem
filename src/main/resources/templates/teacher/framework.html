@@ -22,12 +22,16 @@
         </li>
         <li class="layui-nav-item"
             th:class="${type == 'middle'? 'layui-nav-item layui-this': 'layui-nav-item'}">
-            <a href="" th:href="@{/teacherExamSummaryPage}">考中操作</a>
-            <dl class="layui-nav-child">
+            <a th:if="${examStatus == 'yes'}" href="" th:href="@{/teacherExamSummaryPage}">考中操作</a>
+            <a th:if="${examStatus == 'no'}" href="" >考中操作</a>
+            <dl class="layui-nav-child" th:if="${examStatus == 'yes'}">
                 <dd><a href="" th:href="@{/teacherExamSummaryPage}">考试概况</a></dd>
                 <dd><a href="" th:href="@{/teacherExamStudentInfoPage}">学生信息</a></dd>
                 <dd><a href="" th:href="@{/teacherUnlockStudentPage}">解除绑定</a></dd>
                 <dd><a href="" th:href="@{/teacherNotifyPage}">通知管理</a></dd>
+            </dl>
+            <dl class="layui-nav-child" th:if="${examStatus == 'no'}">
+                <dd><a href="" th:href="@{/teacherExamBeforePage}">开启考试</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item"
@@ -91,7 +95,7 @@
                                 type: "POST",
                                 dataType: "text",
                                 data: {
-                                    password:$("#password").val()
+                                    password: $("#password").val()
                                 },
                                 success() {
                                     $("#teacher_form").submit();

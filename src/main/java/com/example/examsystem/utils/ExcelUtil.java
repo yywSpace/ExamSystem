@@ -23,6 +23,8 @@ public class ExcelUtil {
                 XSSFRow row = sheet.getRow(i);
                 if (row == null)
                     break;
+                if(row.getCell(0) == null)
+                    break;
                 students.add(new Student(
                         row.getCell(0).toString(),
                         row.getCell(1).toString(),

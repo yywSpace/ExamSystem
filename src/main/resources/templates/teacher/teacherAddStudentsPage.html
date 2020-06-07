@@ -45,9 +45,9 @@
     </div>
     <div class="content-block">
         <span>完成学生名单的导入和修改后 </span>
-         <button type="button" class="layui-btn layui-btn-warm" onclick="window.location.replace(document.referrer);">
+         <a type="button" class="layui-btn layui-btn-warm"  th:href="@{/teacherModifyExamInfoPage(id=${examId})}" >
             返回编辑
-        </button>
+        </a>
     </div>
     <div class="content-block">
         <h2>添加单个学生</h2>
