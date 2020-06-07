@@ -99,7 +99,7 @@
                                 },
                                 success() {
                                     $("#teacher_form").submit();
-                                    layer.msg("添加成功");
+                                    layer.msg("修改成功");
                                     layer.close()
                                 }
                             });
@@ -129,9 +129,9 @@
                 return false;
             });
             form.verify({
-                name: function (value) {
-                    if (value.length < 5) {
-                        return '帐号至少得5个字符';
+                            name: function (value) {
+                                if (value.length < 5) {
+                                    return '帐号至少得5个字符';
                     }
                 },
                 // password: [
