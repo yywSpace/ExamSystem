@@ -6,7 +6,7 @@ import com.example.examsystem.entity.StudentExam;
 
 import java.util.List;
 
-public interface StudentExamService {
+public interface  StudentExamService {
 
     StudentExam getStudentExamById(String id, int examId);
 

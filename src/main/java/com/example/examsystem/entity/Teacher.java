@@ -7,6 +7,13 @@ public class Teacher {
     private String password;
     private Boolean isManager = false;
 
+    public Teacher(int id, String name, String fullName, String password) {
+        this.id = id;
+        this.name = name;
+        this.fullName = fullName;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }

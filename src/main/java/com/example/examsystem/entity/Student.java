@@ -9,10 +9,17 @@ public class Student {
     public Student() {
     }
 
-    public Student(String id, String name, String sClass) {
+    public Student(String id, String name, String sClass ) {
         this.id = id;
         this.name = name;
         this.sClass = sClass;
+    }
+
+    public Student(String id, String name, String sClass, String ip) {
+        this.id = id;
+        this.name = name;
+        this.sClass = sClass;
+        this.ip = ip;
     }
 
     public String getId() {
